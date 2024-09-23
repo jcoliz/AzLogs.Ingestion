@@ -1,6 +1,6 @@
-using Weather.Worker.Api;
+using AzLogs.Ingestion.Api;
 
-namespace Weather.Worker.Options;
+namespace AzLogs.Ingestion.Options;
 
 /// <summary>
 /// Options for calling into Weather Service

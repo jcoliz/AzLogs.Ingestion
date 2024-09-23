@@ -1,8 +1,8 @@
 using Azure.Identity;
 using Microsoft.Extensions.Azure;
-using Weather.Worker;
-using Weather.Worker.Api;
-using Weather.Worker.Options;
+using AzLogs.Ingestion;
+using AzLogs.Ingestion.Api;
+using AzLogs.Ingestion.Options;
 
 var builder = Host.CreateApplicationBuilder(args);
 

@@ -1,4 +1,4 @@
-namespace Weather.Worker.Options;
+namespace AzLogs.Ingestion.Options;
 
 /// <summary>
 /// Options describing where logs should be sent

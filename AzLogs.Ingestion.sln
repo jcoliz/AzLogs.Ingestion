@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Weather.Worker.BackgrounService", "BackgroundService\Weather.Worker.BackgrounService.csproj", "{8C81CD76-3B56-47C4-ACA2-7680C6F41404}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackgroundService", "BackgroundService\BackgroundService.csproj", "{CCCF154B-5D00-4C1F-AF2C-66C8D065FAD7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -14,9 +14,9 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{8C81CD76-3B56-47C4-ACA2-7680C6F41404}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8C81CD76-3B56-47C4-ACA2-7680C6F41404}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8C81CD76-3B56-47C4-ACA2-7680C6F41404}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8C81CD76-3B56-47C4-ACA2-7680C6F41404}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CCCF154B-5D00-4C1F-AF2C-66C8D065FAD7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CCCF154B-5D00-4C1F-AF2C-66C8D065FAD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CCCF154B-5D00-4C1F-AF2C-66C8D065FAD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CCCF154B-5D00-4C1F-AF2C-66C8D065FAD7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

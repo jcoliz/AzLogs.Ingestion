@@ -1,11 +1,11 @@
 using System.Runtime.CompilerServices;
 using System.Text.Json;
+using AzLogs.Ingestion.Api;
+using AzLogs.Ingestion.Options;
 using Azure.Monitor.Ingestion;
 using Microsoft.Extensions.Options;
-using Weather.Worker.Api;
-using Weather.Worker.Options;
 
-namespace Weather.Worker;
+namespace AzLogs.Ingestion;
 
 /// <summary>
 /// Background worker service which 
