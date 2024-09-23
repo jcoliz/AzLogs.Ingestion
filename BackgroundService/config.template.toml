@@ -1,0 +1,13 @@
+#
+# Template for providing local secrets and settings
+#
+# To use this: Copy this file to `config.toml`, and fill in your local values.
+# Note that `config.toml` is not committed to source control.
+#
+# Alternately, you could use .NET local secret storage instead.
+#
+
+[Identity]
+TenantId = "<tenant_id>" # Directory (tenant) ID
+AppId = "<client_id>" # Application (client) ID
+AppSecret = "<client_secret>" # Client secret value

@@ -16,6 +16,9 @@
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
+# Deployment-specific secrets
+config.toml
+
 # Mono auto generated files
 mono_crash.*
 
