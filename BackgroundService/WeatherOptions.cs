@@ -8,6 +8,11 @@ namespace Weather.Worker.Options;
 public record WeatherOptions
 {
     /// <summary>
+    /// Config file section
+    /// </summary>
+    public static readonly string Section = "Weather";
+
+    /// <summary>
     /// Which Weather Service office to check
     /// </summary>
     public NWSForecastOfficeId Office {

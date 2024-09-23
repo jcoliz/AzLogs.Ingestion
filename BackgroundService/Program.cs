@@ -12,7 +12,7 @@ builder.Services.Configure<IdentityOptions>(
     builder.Configuration.GetSection(IdentityOptions.Section)
 );
 builder.Services.Configure<WeatherOptions>(
-    builder.Configuration.GetSection("Weather")
+    builder.Configuration.GetSection(WeatherOptions.Section)
 );
 builder.Services.Configure<LogIngestionOptions>(
     builder.Configuration.GetSection(LogIngestionOptions.Section)
@@ -20,6 +20,7 @@ builder.Services.Configure<LogIngestionOptions>(
 
 builder.Services.AddHttpClient<WeatherClient>();
 builder.Services.AddHostedService<Worker>();
+
 builder.Services.AddAzureClients(clientBuilder => 
 {
     // Add a log ingestion client, using endpoint from configuration
