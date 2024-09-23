@@ -13,7 +13,7 @@ public class LogIngestionOptions
     /// <summary>
     /// Data collection endpoint
     /// </summary>
-    public Uri? Endpoint { get; init; }
+    public Uri? EndpointUri { get; init; }
 
     /// <summary>
     /// Immutable ID of Data Collection Rule which we want to process the data

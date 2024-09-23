@@ -28,7 +28,7 @@ builder.Services.AddAzureClients(clientBuilder =>
     LogIngestionOptions logOptions = new();
     builder.Configuration.Bind(LogIngestionOptions.Section, logOptions);
 
-    clientBuilder.AddLogsIngestionClient(logOptions.Endpoint);
+    clientBuilder.AddLogsIngestionClient(logOptions.EndpointUri);
 
     // Add an Azure credential to the client, using details from configuration
 

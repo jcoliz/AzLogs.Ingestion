@@ -59,6 +59,31 @@ Finally, the most important step, where we deploy our resources:
 az deployment group create --name "Deploy-$(Get-Random)" --resource-group $env:RESOURCEGROUP --template-file .\AzDeploy.Bicep\Insights\logs-with-dcr.bicep --parameters .\logs-with-dcr.parameters.json
 ```
 
+You will need some of the output information from this deployment to configure the sample so it points to your newly-provisioned resources.
+Look for the `outputs` section of the deployment. See the configuration section below to find where to put them.
+
+```json
+    "outputs": {
+      "EndpointUri": {
+        "type": "String",
+        "value": "https://dcep-redacted.westus2-1.ingest.monitor.azure.com"
+      },
+      "DcrImmutableId": {
+        "type": "String",
+        "value": "dcr-redacted"
+      },
+      "name": {
+        "type": "String",
+        "value": "dcr-redacted"
+      },
+      "Stream": {
+        "type": "String",
+        "value": "Custom-Forecasts_CL"
+      }
+    },
+```
+
+
 Later on, when you're done, don't forget to tear down the resource group to avoid unexpected charges.
 
 ```powershell
@@ -81,7 +106,7 @@ AppId = "<client_id>" # Application (client) ID
 AppSecret = "<client_secret>" # Client secret value
 
 [LogIngestion]
-Endpoint = "https://<data_collection_endpoint_uri>/" # Data collection endpoint, be sure to include https://
+EndpointUri = "https://<data_collection_endpoint_uri>/" # Data collection endpoint, be sure to include https://
 Stream = "<stream_name>" # The sream name to send to, usually `Custom-<table>_CL`
 DcrImmutableId = "<data_collection_rule_id>" # The Immutable ID for this data collection rule 
 ```
