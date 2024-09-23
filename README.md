@@ -122,3 +122,7 @@ Note that the underlying services all log quite a bit of information to the appl
     "LogLevel": {
       "Default": "Information",
 ```
+
+## Verify data flow
+
+TODO!
