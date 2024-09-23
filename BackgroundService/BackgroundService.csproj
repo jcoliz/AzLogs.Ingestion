@@ -7,7 +7,7 @@
     <UserSecretsId>dotnet-Weather.Worker-d9c3e639-019c-4671-877a-317921faeb8f</UserSecretsId>
     <ApiClientConfigFile>Api/nswag.json</ApiClientConfigFile>
     <ApiClientInputFile>Api/openapi.yaml</ApiClientInputFile>
-    <ApiClientOutputFile>$(BaseOutputPath)\$(BaseIntermediateOutputPath)\ApiClient.cs</ApiClientOutputFile>
+    <ApiClientOutputFile>$(BaseIntermediateOutputPath)\ApiClient.cs</ApiClientOutputFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -25,7 +25,7 @@
 
   <!--Custom task to generate source code from OpenApi Specification before compilation-->
   <Target Name="GenerateSources" BeforeTargets="BeforeBuild" Inputs="$(ApiClientConfigFile);$(ApiClientInputFile)" Outputs="$(ApiClientOutputFile)">
-    <Exec Command="$(NSwagExe_Net80) run $(ApiClientConfigFile) /variables:OutputFile=$(ApiClientOutputFile)" ConsoleToMSBuild="true" />
+    <Exec Command="$(NSwagExe_Net80) run $(ApiClientConfigFile) /variables:OutputFile=..\$(ApiClientOutputFile)" ConsoleToMSBuild="true" />
   </Target>
  
   <!--Custom task to remove generate source code before clean project-->
