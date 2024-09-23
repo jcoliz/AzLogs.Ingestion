@@ -8,18 +8,20 @@ using Weather.Worker.Options;
 namespace Weather.Worker;
 
 /// <summary>
-/// Background worker service
+/// Background worker service which 
 /// </summary>
 /// <remarks>
 /// Keeps everything running!
 /// </remarks>
-/// <param name="client">API client to use to connect with weather service</param>
-/// <param name="options">Options describing where we want the weather</param>
+/// <param name="weatherClient">API client to connect with weather service</param>
+/// <param name="logsClient">API client to connect with log collection endpoint</param>
+/// <param name="weatherOptions">Options describing where we want the weather</param>
+/// <param name="logOptions">Options describing where to send the logs</params>
 /// <param name="logger">Where to log results</param>
 public partial class Worker(
-    WeatherClient client, 
+    WeatherClient weatherClient, 
     LogsIngestionClient logsClient,
-    IOptions<WeatherOptions> options, 
+    IOptions<WeatherOptions> weatherOptions, 
     IOptions<LogIngestionOptions> logOptions,
     ILogger<Worker> logger
     ) : BackgroundService
@@ -30,19 +32,21 @@ public partial class Worker(
     /// <seealso href="https://adamstorr.co.uk/blog/primary-constructor-and-logging-dont-mix/">
     private readonly ILogger<Worker> _logger = logger;
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Main loop which continually fetches readings, then sends to Log Analytics
+    /// </summary>
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         try
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                var forecast = await FetchForecastAsync(stoppingToken);
+                var forecast = await FetchForecastAsync(stoppingToken).ConfigureAwait(false);
                 if (forecast is not null)
                 {
-                    await UploadToLogsAsync(forecast);
+                    await UploadToLogsAsync(forecast, stoppingToken).ConfigureAwait(false);
                 }
-                await Task.Delay(options.Value.Frequency, stoppingToken);
+                await Task.Delay(weatherOptions.Value.Frequency, stoppingToken);
             }
         }
         catch (Exception ex)
@@ -61,16 +65,23 @@ public partial class Worker(
 
         try
         {
-            var forecast = await client.Gridpoint_ForecastAsync(
-                options.Value.Office, 
-                options.Value.GridX, 
-                options.Value.GridY, 
+            var forecast = await weatherClient.Gridpoint_ForecastAsync(
+                weatherOptions.Value.Office, 
+                weatherOptions.Value.GridX, 
+                weatherOptions.Value.GridY, 
                 stoppingToken
-            );
-            result = forecast.Properties.Periods.First();
-            var json = JsonSerializer.Serialize(result);
+            )
+            .ConfigureAwait(false);
 
-            logReceivedOk(json);
+            result = forecast?.Properties.Periods.FirstOrDefault();
+            if (result is null)
+            {
+                logReceivedMalformed();
+            }
+            else
+            {
+                logReceivedOk(JsonSerializer.Serialize(result));
+            }
         }
         catch (Exception ex)
         {
@@ -80,29 +91,38 @@ public partial class Worker(
         return result;
     }
 
-    private async Task UploadToLogsAsync(GridpointForecastPeriod period)
+    /// <summary>
+    /// Send forecast up to Log Analytics
+    /// </summary>
+    /// <param name="period">Forecast data received from NWS</param>
+    /// <param name="stoppingToken">Cancellation token</param>
+    private async Task UploadToLogsAsync(GridpointForecastPeriod period, CancellationToken stoppingToken)
     {
         try
         {
             var response = await logsClient.UploadAsync
             (
-                logOptions.Value.DcrImmutableId, 
-                logOptions.Value.Stream,
-                [ period ]
+                ruleId: logOptions.Value.DcrImmutableId, 
+                streamName: logOptions.Value.Stream,
+                logs: [ period ],
+                cancellationToken: stoppingToken
             )
             .ConfigureAwait(false);
 
-            if (response is null)
+            switch (response?.IsError)
             {
-                throw new Exception("No response received from server");
-            }
+                case null:
+                    logSendNoResponse();
+                    break;
 
-            if (response.IsError)
-            {
-                throw new Exception($"Log upload failed: {response.Status}");
-            }
+                case true:
+                    logSendFail(response.Status);
+                    break;
 
-            logSentOk(response.Status);
+                default:
+                    logSentOk(response.Status);
+                    break;
+            }
         }
         catch (Exception ex)
         {
@@ -113,8 +133,17 @@ public partial class Worker(
     [LoggerMessage(Level = LogLevel.Information, Message = "{Location}: Received OK {Result}", EventId = 1010)]
     public partial void logReceivedOk(string result, [CallerMemberName] string? location = null);
 
+    [LoggerMessage(Level = LogLevel.Error, Message = "{Location}: Received malformed response", EventId = 1018)]
+    public partial void logReceivedMalformed([CallerMemberName] string? location = null);
+
     [LoggerMessage(Level = LogLevel.Information, Message = "{Location}: Sent OK {Status}", EventId = 1020)]
-    public partial void logSentOk(int status, [CallerMemberName] string? location = null);
+    public partial void logSentOk(int Status, [CallerMemberName] string? location = null);
+
+    [LoggerMessage(Level = LogLevel.Error, Message = "{Location}: Send failed, returned no response", EventId = 1027)]
+    public partial void logSendNoResponse([CallerMemberName] string? location = null);
+
+    [LoggerMessage(Level = LogLevel.Error, Message = "{Location}: Send failed {Status}", EventId = 1028)]
+    public partial void logSendFail(int Status, [CallerMemberName] string? location = null);
 
     [LoggerMessage(Level = LogLevel.Error, Message = "{Location}: Failed", EventId = 1008)]
     public partial void logFail(Exception ex, [CallerMemberName] string? location = null);
