@@ -49,6 +49,10 @@ public partial class Worker(
                 await Task.Delay(weatherOptions.Value.Frequency, stoppingToken);
             }
         }
+        catch (TaskCanceledException)
+        {
+            // Task cancellation is not an error, no action required
+        }
         catch (Exception ex)
         {
             logCriticalFail(ex);
@@ -82,6 +86,10 @@ public partial class Worker(
             {
                 logReceivedOk(JsonSerializer.Serialize(result));
             }
+        }
+        catch (TaskCanceledException)
+        {
+            // Task cancellation is not an error, no action required
         }
         catch (Exception ex)
         {
