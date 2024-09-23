@@ -23,5 +23,5 @@ public class IdentityOptions
     /// <summary>
     /// Client secret value
     /// </summary>
-    public string? AppSecret { get; init; }
+    public string AppSecret { get; init; } = string.Empty;
 }
