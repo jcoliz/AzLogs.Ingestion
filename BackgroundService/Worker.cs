@@ -1,5 +1,6 @@
 using System.Runtime.CompilerServices;
 using System.Text.Json;
+using Azure.Monitor.Ingestion;
 using Microsoft.Extensions.Options;
 using Weather.Worker.Api;
 using Weather.Worker.Options;
@@ -17,7 +18,9 @@ namespace Weather.Worker;
 /// <param name="logger">Where to log results</param>
 public partial class Worker(
     WeatherClient client, 
+    LogsIngestionClient logsClient,
     IOptions<WeatherOptions> options, 
+    IOptions<LogIngestionOptions> logOptions,
     ILogger<Worker> logger
     ) : BackgroundService
 {
@@ -34,7 +37,11 @@ public partial class Worker(
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                await FetchForecastAsync(stoppingToken);
+                var forecast = await FetchForecastAsync(stoppingToken);
+                if (forecast is not null)
+                {
+                    await UploadToLogsAsync(forecast);
+                }
                 await Task.Delay(options.Value.Frequency, stoppingToken);
             }
         }
@@ -48,8 +55,10 @@ public partial class Worker(
     /// Fetch forecast from Weather Service
     /// </summary>
     /// <param name="stoppingToken">Cancellation token</param>
-    private async Task FetchForecastAsync(CancellationToken stoppingToken)
+    private async Task<GridpointForecastPeriod?> FetchForecastAsync(CancellationToken stoppingToken)
     {
+        GridpointForecastPeriod? result = default;
+
         try
         {
             var forecast = await client.Gridpoint_ForecastAsync(
@@ -58,7 +67,8 @@ public partial class Worker(
                 options.Value.GridY, 
                 stoppingToken
             );
-            var json = JsonSerializer.Serialize(forecast.Properties.Periods.First());
+            result = forecast.Properties.Periods.First();
+            var json = JsonSerializer.Serialize(result);
 
             logReceivedOk(json);
         }
@@ -66,10 +76,45 @@ public partial class Worker(
         {
             logFail(ex);
         }
+
+        return result;
     }
 
-    [LoggerMessage(Level = LogLevel.Information, Message = "{Location}: Received OK {Result}", EventId = 1000)]
+    private async Task UploadToLogsAsync(GridpointForecastPeriod period)
+    {
+        try
+        {
+            var response = await logsClient.UploadAsync
+            (
+                logOptions.Value.DcrImmutableId, 
+                logOptions.Value.Stream,
+                [ period ]
+            )
+            .ConfigureAwait(false);
+
+            if (response is null)
+            {
+                throw new Exception("No response received from server");
+            }
+
+            if (response.IsError)
+            {
+                throw new Exception($"Log upload failed: {response.Status}");
+            }
+
+            logSentOk(response.Status);
+        }
+        catch (Exception ex)
+        {
+            logFail(ex);
+        }
+    }
+
+    [LoggerMessage(Level = LogLevel.Information, Message = "{Location}: Received OK {Result}", EventId = 1010)]
     public partial void logReceivedOk(string result, [CallerMemberName] string? location = null);
+
+    [LoggerMessage(Level = LogLevel.Information, Message = "{Location}: Sent OK {Status}", EventId = 1020)]
+    public partial void logSentOk(int status, [CallerMemberName] string? location = null);
 
     [LoggerMessage(Level = LogLevel.Error, Message = "{Location}: Failed", EventId = 1008)]
     public partial void logFail(Exception ex, [CallerMemberName] string? location = null);

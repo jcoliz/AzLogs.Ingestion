@@ -1,0 +1,25 @@
+{
+    "number": 1,
+    "name": "Today",
+    "startTime": "2024-09-23T09:00:00-07:00",
+    "endTime": "2024-09-23T18:00:00-07:00",
+    "isDaytime": true,
+    "temperature": 72,
+    "temperatureUnit": "F",
+    "temperatureTrend": "",
+    "probabilityOfPrecipitation": {
+        "value": null,
+        "maxValue": 0,
+        "minValue": 0,
+        "unitCode": "wmoUnit:percent",
+        "qualityControl": "Z"
+    },
+    "dewpoint": null,
+    "relativeHumidity": null,
+    "windSpeed": "6 mph",
+    "windGust": null,
+    "windDirection": "SSW",
+    "icon": "https://api.weather.gov/icons/land/day/bkn?size=medium",
+    "shortForecast": "Partly Sunny",
+    "detailedForecast": "Partly sunny, with a high near 72. South southwest wind around 6 mph."
+}
