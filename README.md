@@ -14,7 +14,7 @@ The sample retrieves weather forecasts from the U.S. [National Weather Service A
 * Custom Log Analytics table with a corresponding Data Collection Rule
 
 Please read through the [Logs Ingestion API in Azure Monitor](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/logs-ingestion-api-overview) article carefully before proceeding.
-This samnple will follow that article closely.
+This sample will follow that article closely.
 
 ## Register a Microsoft Entra app
 
@@ -37,6 +37,32 @@ necessary baseline templates.
 
 ```powershell
 git submodules --update
+```
+
+From a terminal window in the `.azure\deploy` folder, complete the following steps.
+
+First, we'll set an environment variable to our chosen resource group name. Pick anything that helps you remember what the group is for:
+
+```powershell
+$env:RESOURCEGROUP = "azlogs-ingestion"
+```
+
+Next, we will create that group, in our chosen location. I'm a fan of Moses Lake. You may feel differently.
+
+```powershell
+az group create --name $env:RESOURCEGROUP --location "West US 2"
+```
+
+Finally, the most important step, where we deploy our resources:
+
+```powershell
+az deployment group create --name "Deploy-$(Get-Random)" --resource-group $env:RESOURCEGROUP --template-file .\AzDeploy.Bicep\Insights\logs-with-dcr.bicep --parameters .\logs-with-dcr.parameters.json
+```
+
+Later on, when you're done, don't forget to tear down the resource group to avoid unexpected charges.
+
+```powershell
+az group delete --yes --name $env:RESOURCEGROUP
 ```
 
 ## Configuration
@@ -80,7 +106,7 @@ Frequency is described in in Hours:Minutes:Seconds.
 
 ## Running
 
-Once you have all that set up, simply run the app!
+Once you have all that set up, simply build and run the sample!
 
 ```powershell
 dotnet run
