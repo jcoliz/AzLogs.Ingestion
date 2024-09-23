@@ -5,9 +5,9 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>dotnet-Weather.Worker-d9c3e639-019c-4671-877a-317921faeb8f</UserSecretsId>
-    <ApiClientConfigFile>nswag.json</ApiClientConfigFile>
-    <ApiClientInputFile>openapi.yaml</ApiClientInputFile>
-    <ApiClientOutputFile>$(BaseIntermediateOutputPath)\ApiClient.cs</ApiClientOutputFile>
+    <ApiClientConfigFile>Api/nswag.json</ApiClientConfigFile>
+    <ApiClientInputFile>Api/openapi.yaml</ApiClientInputFile>
+    <ApiClientOutputFile>$(BaseOutputPath)\$(BaseIntermediateOutputPath)\ApiClient.cs</ApiClientOutputFile>
   </PropertyGroup>
 
   <ItemGroup>
