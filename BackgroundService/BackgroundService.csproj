@@ -28,7 +28,7 @@
     <Exec Command="$(NSwagExe_Net80) run $(ApiClientConfigFile) /variables:OutputFile=../$(ApiClientOutputFile)" ConsoleToMSBuild="true" />
   </Target>
  
-  <!--Custom task to remove generate source code before clean project-->
+  <!--Custom task to remove generated source code before clean project-->
   <Target Name="RemoveGenerateSources" BeforeTargets="CoreClean">
       <RemoveDir Directories="$(ApiClientOutputFile)" />
   </Target>
