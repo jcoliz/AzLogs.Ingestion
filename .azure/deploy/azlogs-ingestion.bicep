@@ -63,7 +63,7 @@ module dcr 'AzDeploy.Bicep/Insights/datacollectionrule.bicep' = {
 }
 
 module publisherRole 'AzDeploy.Bicep/Insights/monitoring-metrics-publisher-role.bicep' = {
-  name: 'publisherROle'
+  name: 'publisherRole'
   params: {
     dcrName: dcr.outputs.name
     principalId: principalId
