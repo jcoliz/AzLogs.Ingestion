@@ -28,10 +28,11 @@ When you're done, you'll need four key pieces of information
 
 ## Deploy Azure Resources
 
-There is quite a bit of setup needed on Azure resources. If you're setting them up in the portal, the easiest way is create a new Log Analytics resource, then create a custom table.
+This sample requires three Azure resources: Log Analytics Workspace, Data Collection Rule, and Data Collection Endpoint.
+If you're setting them up in the Azure Portal, the easiest way is create a new Log Analytics resource, then create a custom table.
 That flow will lead you down the path of creating a Data Collection Rule with a Data Collection Endpoint.
 
-However, for this sample, there's an even easier way. This sample contains an Azure Resource Manager (ARM) template to set up everything you need, ready to go: [azlogs-ingestion.bicep](./.azure/deploy/azlogs-ingestion.bicep).
+However, for this sample, there's an even easier way. Here you will find an Azure Resource Manager (ARM) template to set up everything you need, ready to go: [azlogs-ingestion.bicep](./.azure/deploy/azlogs-ingestion.bicep).
 Did you clone this repo with submodules? If not, now is the time to update submodules so you have the [AzDeploy.Bicep](https://github.com/jcoliz/AzDeploy.Bicep) project handy with the
 necessary module templates.
 
@@ -39,7 +40,7 @@ necessary module templates.
 git submodules --update
 ```
 
-From a terminal window in this folder, complete the following steps.
+From a PowerShell window in this folder, complete the following steps.
 
 First, we'll set an environment variable to our chosen resource group name. Pick anything that helps you remember what the group is for:
 
@@ -47,7 +48,7 @@ First, we'll set an environment variable to our chosen resource group name. Pick
 $env:RESOURCEGROUP = "azlogs-ingestion"
 ```
 
-Next, we will create that group, in our chosen location. I'm a fan of Moses Lake. You may feel differently.
+Next, we will create that group, in our chosen location. I'm a fan of [Moses Lake](https://www.datacenters.com/microsoft-azure-west-us-2-washington). You may feel differently.
 
 ```powershell
 az group create --name $env:RESOURCEGROUP --location "West US 2"
@@ -108,8 +109,8 @@ AppSecret = "<client_secret>" # Client secret value
 
 [LogIngestion]
 EndpointUri = "https://<data_collection_endpoint_uri>/" # Data collection endpoint, be sure to include https://
-Stream = "<stream_name>" # The sream name to send to, usually `Custom-<table>_CL`
-DcrImmutableId = "<data_collection_rule_id>" # The Immutable ID for this data collection rule 
+Stream = "<stream_name>" # The stream name to send to, usually `Custom-<table>_CL`
+DcrImmutableId = "<data_collection_rule_id>" # The Immutable ID for this Data Collection Rule 
 ```
 
 Optionally, you could elect to configure the options for connecting to the weather service.
