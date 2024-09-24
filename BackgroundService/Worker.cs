@@ -8,7 +8,7 @@ using Microsoft.Extensions.Options;
 namespace AzLogs.Ingestion;
 
 /// <summary>
-/// Background worker service which 
+/// Background worker service which continually runs the logic of this sample
 /// </summary>
 /// <remarks>
 /// Keeps everything running!
@@ -17,7 +17,7 @@ namespace AzLogs.Ingestion;
 /// <param name="logsClient">API client to connect with log collection endpoint</param>
 /// <param name="weatherOptions">Options describing where we want the weather</param>
 /// <param name="logOptions">Options describing where to send the logs</params>
-/// <param name="logger">Where to log results</param>
+/// <param name="logger">Where to send application logs</param>
 public partial class Worker(
     WeatherClient weatherClient, 
     LogsIngestionClient logsClient,
@@ -27,7 +27,7 @@ public partial class Worker(
     ) : BackgroundService
 {
     /// <summary>
-    /// Where to log results
+    /// Where to send application logs
     /// </summary>
     /// <seealso href="https://adamstorr.co.uk/blog/primary-constructor-and-logging-dont-mix/">
     private readonly ILogger<Worker> _logger = logger;

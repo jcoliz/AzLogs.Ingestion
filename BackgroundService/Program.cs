@@ -1,8 +1,8 @@
-using Azure.Identity;
-using Microsoft.Extensions.Azure;
 using AzLogs.Ingestion;
 using AzLogs.Ingestion.Api;
 using AzLogs.Ingestion.Options;
+using Azure.Identity;
+using Microsoft.Extensions.Azure;
 
 var builder = Host.CreateApplicationBuilder(args);
 
@@ -40,9 +40,9 @@ builder.Services.AddAzureClients(clientBuilder =>
     (
         new ClientSecretCredential
         (
-            idOptions.TenantId.ToString(), 
-            idOptions.AppId.ToString(),
-            idOptions.AppSecret
+            tenantId: idOptions.TenantId.ToString(), 
+            clientId: idOptions.AppId.ToString(),
+            clientSecret: idOptions.AppSecret
         )
     );
     // NOTE: In production, we would simply use: `clientBuilder.UseCredential(new DefaultAzureCredential());`
