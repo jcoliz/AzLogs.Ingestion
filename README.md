@@ -15,7 +15,18 @@ This sample will follow that article closely.
 
 ## Register a Microsoft Entra app
 
-The very first step is to [Register a Microsoft Entra app and create a service principal](https://learn.microsoft.com/en-us/entra/identity-platform/howto-create-service-principal-portal#register-an-application-with-azure-ad-and-create-a-service-principal) following the steps in that article.
+The very first step is to [Register an application with the Microsoft Identity Platform](https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app?tabs=client-secret) following the steps in that article. Be sure to [Add a client secret](https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app?tabs=client-secret#add-credentials) as described on that page.
+
+After registering the application, you'll also need the Service Principal ID.
+For more details, see [Application and service principal objects in Microsoft Entra ID](https://learn.microsoft.com/en-us/entra/identity-platform/app-objects-and-service-principals?tabs=azure-cli). The fastest way to get this is using the Azure CLI, supplying the Client ID for your new application.
+
+```dotnetcli
+az ad sp list --filter "appId eq '{Client ID}'"
+```
+
+This displays a full list of information about the Service Principal for your application.
+The piece you're looking for is the `id` field.
+
 When you're done, you'll need four key pieces of information
 
 * Tenant ID
