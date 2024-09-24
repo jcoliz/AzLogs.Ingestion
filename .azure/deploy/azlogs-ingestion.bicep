@@ -2,6 +2,12 @@
 // Deploys a complete set of needed resources for the sample at:
 //    https://github.com/jcoliz/AzLogs.Ingestion
 //
+// Includes:
+//    * Log Analytics Workspace (LAW) with custom table
+//    * Data Collection Endpoint (DCE)
+//    * Data Collection Rule (DCR) with connection to DCE and LAW
+//    * Monitoring Metrics Publisher role on DCR for the Service Principal of your choice
+//
 
 @description('Unique suffix for all resources in this deployment')
 @minLength(5)
@@ -19,11 +25,13 @@ param transformKql string
 @description('Columns of input schema')
 param inputColumns array
 
-@description('The principal that will be given data owner permission for the Data Collection Rule resource')
+@description('The principal that will be assigned Monitoring Metrics Publisher role for the Data Collection Rule resource')
 param principalId string
 
 @description('The type of the given principal')
 param principalType string = 'ServicePrincipal'
+
+// Deploy Log Anaytics Workspace
 
 module logs 'AzDeploy.Bicep/OperationalInsights/loganalytics.bicep' = {
   name: 'logs'
@@ -33,6 +41,8 @@ module logs 'AzDeploy.Bicep/OperationalInsights/loganalytics.bicep' = {
   }
 }
 
+// Deploy custom table on that workspace
+
 module table 'AzDeploy.Bicep/OperationalInsights/workspace-table.bicep' = {
   name: 'table'
   params: {
@@ -41,6 +51,8 @@ module table 'AzDeploy.Bicep/OperationalInsights/workspace-table.bicep' = {
   }
 }
 
+// Deploy Data Collection Endpoint
+
 module dcep 'AzDeploy.Bicep/Insights/datacollectionendpoint.bicep' = {
   name: 'dcep'
   params: {
@@ -48,6 +60,8 @@ module dcep 'AzDeploy.Bicep/Insights/datacollectionendpoint.bicep' = {
     location: location
   }
 }
+
+// Deploy Data Collection Rule (DCR) with connection to DCE and LAW custom table
 
 module dcr 'AzDeploy.Bicep/Insights/datacollectionrule.bicep' = {
   name: 'dcr'
@@ -62,6 +76,8 @@ module dcr 'AzDeploy.Bicep/Insights/datacollectionrule.bicep' = {
   }
 }
 
+// Deploy Monitoring Metrics Publisher role on DCR for supplied Service Principal
+
 module publisherRole 'AzDeploy.Bicep/Insights/monitoring-metrics-publisher-role.bicep' = {
   name: 'publisherRole'
   params: {
@@ -70,6 +86,9 @@ module publisherRole 'AzDeploy.Bicep/Insights/monitoring-metrics-publisher-role.
     principalType: principalType
   }
 }
+
+// Return necessary outputs to user. Put these in `LogIngestion` section
+// of application configuration, e.g. `config.toml` 
 
 output DcrImmutableId string = dcr.outputs.DcrImmutableId
 output EndpointUri string = dcep.outputs.EndpointUri
