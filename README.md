@@ -27,7 +27,7 @@ az ad sp list --filter "appId eq '{Client ID}'"
 This displays a full list of information about the Service Principal for your application.
 The piece you're looking for is the `id` field.
 
-When you're done, you'll need four key pieces of information
+When you're done, you'll have four key pieces of information
 
 * Tenant ID
 * Client ID
@@ -141,10 +141,10 @@ Frequency is described in in Hours:Minutes:Seconds.
 
 ## Running
 
-Once you have all that set up, simply build and run the `BackgroundWorker` project!
+Once you have all that set up, simply build and run the `BackgroundService` project!
 
 ```powershell
-dotnet run
+dotnet run --project BackgroundService
 
 <6> [ 23/09/2024 12:04:42 ] AzLogs.Ingestion.Worker[1010] FetchForecastAsync: Received OK {"number":1,"name":"Today","startTime":"2024-09-23T11:00:00-07:00","endTime":"2024-09-23T18:00:00-07:00","isDaytime":true,"temperature":72,"temperatureUnit":"F","temperatureTrend":"","probabilityOfPrecipitation":{"value":null,"maxValue":0,"minValue":0,"unitCode":"wmoUnit:percent","qualityControl":"Z"},"dewpoint":null,"relativeHumidity":null,"windSpeed":"6 mph","windGust":null,"windDirection":"SSW","icon":"https://api.weather.gov/icons/land/day/sct?size=medium","shortForecast":"Mostly Sunny","detailedForecast":"Mostly sunny, with a high near 72. South southwest wind around 6 mph."}
 <6> [ 23/09/2024 12:04:42 ] AzLogs.Ingestion.Worker[1020] UploadToLogsAsync: Sent OK 204
