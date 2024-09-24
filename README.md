@@ -39,7 +39,7 @@ necessary baseline templates.
 git submodules --update
 ```
 
-From a terminal window in the `.azure\deploy` folder, complete the following steps.
+From a terminal window in this folder, complete the following steps.
 
 First, we'll set an environment variable to our chosen resource group name. Pick anything that helps you remember what the group is for:
 
@@ -56,10 +56,16 @@ az group create --name $env:RESOURCEGROUP --location "West US 2"
 Finally, the most important step, where we deploy our resources:
 
 ```powershell
-az deployment group create --name "Deploy-$(Get-Random)" --resource-group $env:RESOURCEGROUP --template-file .\AzDeploy.Bicep\Insights\logs-with-dcr.bicep --parameters .\logs-with-dcr.parameters.json
+az deployment group create --name "Deploy-$(Get-Random)" --resource-group $env:RESOURCEGROUP --template-file .azure\deploy\azlogs-ingestion.bicep --parameters .azure\deploy\azlogs-ingestion.parameters.json
 ```
 
-You will need some of the output information from this deployment to configure the sample so it points to your newly-provisioned resources.
+You will be prompted to enter the Service Principal ID of the Entra App Registration you created earlier.
+
+```dotnetcli
+Please provide string value for 'principalId' (? for help): 
+```
+
+After the deployment completes, take note of the outputs from this deployment. You will use them to configure the sample so it points to your newly-provisioned resources.
 Look for the `outputs` section of the deployment. See the configuration section below to find where to put them.
 
 ```json
@@ -72,17 +78,12 @@ Look for the `outputs` section of the deployment. See the configuration section 
         "type": "String",
         "value": "dcr-redacted"
       },
-      "name": {
-        "type": "String",
-        "value": "dcr-redacted"
-      },
       "Stream": {
         "type": "String",
         "value": "Custom-Forecasts_CL"
       }
     },
 ```
-
 
 Later on, when you're done, don't forget to tear down the resource group to avoid unexpected charges.
 
