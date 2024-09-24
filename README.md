@@ -100,7 +100,7 @@ Once you have everyhing above running, you'll need to configure the sample with 
 as well as the details on your Data Collection Rule. You could follow the practices outlined in
 [Safe storage of app secrets in development in ASP.NET Core](https://learn.microsoft.com/en-us/aspnet/core/security/app-secrets).
 
-Alternately, you can create a `config.toml` file containing these secrets in the `BackgroundWorker` folder. This file will not be committed to source control.
+Alternately, you can create a `config.toml` file containing these secrets in the `BackgroundService` folder. This file will not be committed to source control.
 To begin, copy the existing `config.template.toml` file to a new file named `config.toml`. Then fill this in with the values unique to your deployment.
 
 ```toml
