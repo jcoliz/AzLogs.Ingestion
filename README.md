@@ -41,11 +41,11 @@ If you're setting them up in the Azure Portal, the easiest way is create a new L
 That flow will lead you down the path of creating a Data Collection Rule with a Data Collection Endpoint.
 
 However, for this sample, there's an even easier way. Here you will find an Azure Resource Manager (ARM) template to set up everything you need, ready to go: [azlogs-ingestion.bicep](./.azure/deploy/azlogs-ingestion.bicep).
-Did you clone this repo with submodules? If not, now is the time to update submodules so you have the [AzDeploy.Bicep](https://github.com/jcoliz/AzDeploy.Bicep) project handy with the
+Did you clone this repo with submodules? If not, now is the time to init and update submodules so you have the [AzDeploy.Bicep](https://github.com/jcoliz/AzDeploy.Bicep) project handy with the
 necessary module templates.
 
 ```powershell
-git submodules --update
+git submodule update --init
 ```
 
 From a PowerShell window in this folder, complete the following steps.
@@ -78,20 +78,20 @@ After the deployment completes, take note of the outputs from this deployment. Y
 Look for the `outputs` section of the deployment. Please refer the configuration section below to find where to put them.
 
 ```json
-    "outputs": {
-      "EndpointUri": {
-        "type": "String",
-        "value": "https://dcep-redacted.westus2-1.ingest.monitor.azure.com"
-      },
-      "DcrImmutableId": {
-        "type": "String",
-        "value": "dcr-redacted"
-      },
-      "Stream": {
-        "type": "String",
-        "value": "Custom-Forecasts_CL"
-      }
-    },
+"outputs": {
+  "EndpointUri": {
+    "type": "String",
+    "value": "https://dcep-redacted.westus2-1.ingest.monitor.azure.com"
+  },
+  "DcrImmutableId": {
+    "type": "String",
+    "value": "dcr-redacted"
+  },
+  "Stream": {
+    "type": "String",
+    "value": "Custom-Forecasts_CL"
+  }
+},
 ```
 
 ## Configuration
@@ -120,12 +120,12 @@ Out of the box, the sample requests a weather forecast for the area surrounding 
 checking once every 5 seconds. You can find these values in `appsettings.json`.
 
 ```json
-  "Weather": {
-    "Office": "SEW",
-    "GridX": 124,
-    "GridY": 69,
-    "Frequency": "00:00:05"
-  }
+"Weather": {
+  "Office": "SEW",
+  "GridX": 124,
+  "GridY": 69,
+  "Frequency": "00:00:05"
+}
 ```
 
 The weather office, and grid x,y positions are specific to the NWS grid system. You can find values by calling the `/points/{lat,long}`
@@ -147,9 +147,9 @@ dotnet run --project BackgroundService
 Note that the underlying services all log quite a bit of information to the application logger as well. If you want to see that in action, simply increase the default level in `appsettings.json`:
 
 ```json
-  "Logging": {
-    "LogLevel": {
-      "Default": "Information",
+"Logging": {
+  "LogLevel": {
+    "Default": "Information",
 ```
 
 ## Verify data flow
