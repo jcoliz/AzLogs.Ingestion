@@ -34,7 +34,7 @@ When you're done, you'll have four key pieces of information
 * Client Secret
 * Service Principal ID
 
-## Deploy Azure Resources
+## Deploy Azure resources
 
 This sample requires three Azure resources: Log Analytics Workspace, Data Collection Rule, and Data Collection Endpoint.
 If you're setting them up in the Azure Portal, the easiest way is create a new Log Analytics resource, then create a custom table.
@@ -92,12 +92,6 @@ Look for the `outputs` section of the deployment. Please refer the configuration
         "value": "Custom-Forecasts_CL"
       }
     },
-```
-
-Later on, when you're done, don't forget to tear down the resource group to avoid unexpected charges.
-
-```powershell
-az group delete --yes --name $env:RESOURCEGROUP
 ```
 
 ## Configuration
@@ -160,4 +154,29 @@ Note that the underlying services all log quite a bit of information to the appl
 
 ## Verify data flow
 
-TODO!
+After observing that logs are sent successfully to Log Analytics from the client application logs, it's time to turn our attention
+to verifying the data has landed correctly in the service. Using the Azure Portal, navigate to the resource group you created above, e.g. `azlogs-ingestion`, then click into the Data Change Rule resource. In the navigation panel on the left, expand "Monitoring", then choose "Metrics". Click "Add Metric", then choose "Logs Ingestion Requests per Min". You should see a chart like the one below:
+
+![Data Change Rule Metrics](./docs/images/dcr-metrics.png)
+
+Next, we can look at the Log Analytics workspace itself to confirm that the logs have landed in their final destination. Again, navigate to the resource group page, but this time click into the Log Analytics resource. Click "Logs", and then enter this query:
+
+```kql
+Forecasts_CL
+| summarize Count = count() by bin(TimeGenerated, 1min)
+| render timechart 
+```
+
+If all is well, you will see a chart like the one below:
+
+![Log Analytics Workspace Query](./docs/images/logs-query.png)
+
+Congratulations, you have successfully ingested logs into a Log Analytics Workspace custom table using a Data Collection Rule!
+
+## Tear down
+
+When you're done, don't forget to tear down the resource group to avoid unexpected charges.
+
+```powershell
+az group delete --yes --name $env:RESOURCEGROUP
+```
