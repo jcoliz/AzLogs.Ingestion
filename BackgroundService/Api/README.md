@@ -50,4 +50,4 @@ The client SDK generation is specified in the project definition file.
 
 ## `sample/forecast.json`
 
-This is an example of what data is sent up to the Data Collection Endpoint. If you create a Data Collection Rule by hand in the Azure portal, you will find this helpful to upload as an example of the incoming data. 
+This is an example of what data is sent up to the Data Collection Endpoint. If you create a Data Collection Rule by hand in the Azure portal, you will find this helpful to upload as an example of the incoming data.
