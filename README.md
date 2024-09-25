@@ -13,6 +13,14 @@ Let's say we have some important data available in an external service, and we w
 * **Transform** it into our desired schema using the Data Collection Rule, and
 * **Load** it into a Log Analytics Workspace table.
 
+## Architecture
+
+![Architecture](./docs/images/Architecture.png)
+
+This is a very simple, focused sample. Our application sits at the center of the system, doing all the work.
+It pulls data from an external source, here weather.gov, then forwards it to a Log Analytics Workspace
+using a Data Collection Endpoint and Data Collection Rule.
+
 ## Prerequisites
 
 In order to follow the instructions shown here, and run this sample, you will first need:
