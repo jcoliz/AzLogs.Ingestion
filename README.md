@@ -19,7 +19,7 @@ Let's say we have some important data available in an external service, and we w
 
 This is a very simple, focused sample. Our application sits at the center of the system, doing all the work.
 It pulls data from an external source (here, weather.gov) then forwards it to a Log Analytics Workspace
-using a Data Collection Endpoint and Data Collection Rule. 
+using a Data Collection Endpoint and Data Collection Rule.
 
 Although the application runs locally in this sample,
 it would be very simple to run it as an Azure Function regularly pumping the external data through the system.
