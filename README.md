@@ -15,7 +15,7 @@ Let's say we have some important data available in an external service, and we w
 
 ## Architecture
 
-![Architecture](./docs/images/Architecture.png)
+<p align="center"><img src="https://github.com/jcoliz/AzLogs.Ingestion/raw/main/docs/images/Architecture.png" alt="System Architecture"></p>
 
 This is a very simple, focused sample. Our application sits at the center of the system, doing all the work.
 It pulls data from an external source, here weather.gov, then forwards it to a Log Analytics Workspace
