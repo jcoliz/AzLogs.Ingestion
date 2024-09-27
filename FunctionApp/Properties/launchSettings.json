@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "AzLogs.Ingestion": {
+      "commandName": "Project",
+      "commandLineArgs": "--port 7084",
+      "launchBrowser": false
+    }
+  }
+}
