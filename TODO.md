@@ -14,3 +14,23 @@ This branch, `topic/azfn` is an experimental forward-only branch to convert this
 * [Guide for running C# Azure Functions in the isolated worker model](https://learn.microsoft.com/en-us/azure/azure-functions/dotnet-isolated-process-guide?tabs=windows)
 * [Timer trigger for Azure Functions](https://learn.microsoft.com/en-us/azure/azure-functions/functions-bindings-timer?tabs=python-v2%2Cisolated-process%2Cnodejs-v4&pivots=programming-language-csharp)
 * [Code and test Azure Functions locally](https://learn.microsoft.com/en-us/azure/azure-functions/functions-develop-local)
+
+## Steps
+
+1. Deploy Azure Function resource
+1. Build basic azure function that runs on timer and outpus logs. Make sure we can read those logs and deploy.
+1. Deploy via github workflow
+1. Build a complete ARM template
+
+## Implementation Notes
+
+```dotnetcli
+$env:RESOURCEGROUP = "azlogs-ingestion"
+az group create --name $env:RESOURCEGROUP --location "West US 2"
+az deployment group create --name "Deploy-$(Get-Random)" --resource-group $env:RESOURCEGROUP --template-file .\.azure\deploy\AzDeploy.Bicep\Web\fn-storage.bicep
+```
+
+## TODOs for ARM template
+
+* Should send in LAW/DCR config via app settings
+* Use the service principal created for the fn app to assign metrics publisher
