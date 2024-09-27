@@ -80,7 +80,7 @@ module fnconfig './fn-config.bicep' = {
     location: location
     endpointName: dcep.outputs.name
     dcrName: dcr.outputs.name
-    streamName: 'Custom=${tableSchema.name}'
+    streamName: 'Custom-${tableSchema.name}'
   }
 }
 
