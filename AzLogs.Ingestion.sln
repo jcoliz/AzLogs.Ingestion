@@ -5,8 +5,6 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackgroundService", "BackgroundService\BackgroundService.csproj", "{CCCF154B-5D00-4C1F-AF2C-66C8D065FAD7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzLogs.Ingestion", "FunctionApp\FunctionApp.csproj", "{9B877E13-EEF6-4283-96D8-550EAC5B4383}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
