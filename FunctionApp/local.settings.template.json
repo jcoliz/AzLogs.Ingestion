@@ -5,6 +5,9 @@
     "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
     "WEATHER__OFFICE": "SEW",
     "WEATHER__GRIDX": "124",
-    "WEATHER__GRIDY": "69"    
+    "WEATHER__GRIDY": "69",
+    "LogIngestion__DcrImmutableId": "*** Use value from deployment outputs ***",
+    "LogIngestion__EndpointUri": "*** Use value from deployment outputs ***",
+    "LogIngestion__Stream": "*** Use value from deployment outputs ***"
   }
 }

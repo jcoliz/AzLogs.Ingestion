@@ -94,3 +94,14 @@ module publisherRole 'AzDeploy.Bicep/Insights/monitoring-metrics-publisher-role.
     principalType: 'ServicePrincipal'
   }
 }
+
+// Return necessary outputs to user. Put these in `local.settings.json
+
+// "LogIngestion__DcrImmutableId": "<below value>"
+output DcrImmutableId string = dcr.outputs.DcrImmutableId
+
+// "LogIngestion__EndpointUri": "<below value>"
+output EndpointUri string = dcep.outputs.EndpointUri
+
+// "LogIngestion__Stream": "<below value>"
+output Stream string = dcr.outputs.Stream

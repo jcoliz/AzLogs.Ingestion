@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackgroundService", "Backgr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeatherApiClient", "WeatherApiClient\WeatherApiClient.csproj", "{DDC98491-E812-4F9F-A26C-81EB0899742A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FunctionApp", "FunctionApp\FunctionApp.csproj", "{2D40149B-7524-4BE9-857E-77DA47088740}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -28,5 +30,9 @@ Global
 		{DDC98491-E812-4F9F-A26C-81EB0899742A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DDC98491-E812-4F9F-A26C-81EB0899742A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DDC98491-E812-4F9F-A26C-81EB0899742A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2D40149B-7524-4BE9-857E-77DA47088740}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D40149B-7524-4BE9-857E-77DA47088740}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D40149B-7524-4BE9-857E-77DA47088740}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D40149B-7524-4BE9-857E-77DA47088740}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
