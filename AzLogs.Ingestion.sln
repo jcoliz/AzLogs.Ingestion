@@ -5,6 +5,8 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackgroundService", "BackgroundService\BackgroundService.csproj", "{CCCF154B-5D00-4C1F-AF2C-66C8D065FAD7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeatherApiClient", "WeatherApiClient\WeatherApiClient.csproj", "{CA42FB0B-4D0F-4239-8505-59B277449F8B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{CCCF154B-5D00-4C1F-AF2C-66C8D065FAD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CCCF154B-5D00-4C1F-AF2C-66C8D065FAD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CCCF154B-5D00-4C1F-AF2C-66C8D065FAD7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA42FB0B-4D0F-4239-8505-59B277449F8B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA42FB0B-4D0F-4239-8505-59B277449F8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA42FB0B-4D0F-4239-8505-59B277449F8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA42FB0B-4D0F-4239-8505-59B277449F8B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
