@@ -32,18 +32,18 @@ public partial class Worker(
     /// <summary>
     /// Main loop which continually fetches readings, then sends to Log Analytics
     /// </summary>
+    /// <param name="stoppingToken">Cancellation token</param>
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         try
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                var forecast = await weatherTransport.FetchForecastAsync(stoppingToken).ConfigureAwait(false);
-                if (forecast is not null)
-                {
-                    await logsTransport.UploadToLogsAsync(forecast, stoppingToken).ConfigureAwait(false);
-                }
-                await Task.Delay(workerOptions.Value.Frequency, stoppingToken);
+                await Task.WhenAll(
+                    RunOnceAsync(stoppingToken),
+                    Task.Delay(workerOptions.Value.Frequency, stoppingToken)
+                )
+                .ConfigureAwait(false);
             }
         }
         catch (TaskCanceledException)
@@ -53,6 +53,19 @@ public partial class Worker(
         catch (Exception ex)
         {
             logCriticalFail(ex);
+        }
+    }
+
+    /// <summary>
+    /// Run one iteration of application logic
+    /// </summary>
+    /// <param name="stoppingToken">Cancellation token</param>
+    private async Task RunOnceAsync(CancellationToken stoppingToken)
+    {
+        var forecast = await weatherTransport.FetchForecastAsync(stoppingToken).ConfigureAwait(false);
+        if (forecast is not null)
+        {
+            await logsTransport.UploadToLogsAsync(forecast, stoppingToken).ConfigureAwait(false);
         }
     }
 
