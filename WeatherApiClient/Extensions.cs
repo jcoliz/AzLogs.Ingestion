@@ -20,6 +20,7 @@ public static class WeatherApiClientExtensions
         );
 
         builder.Services.AddHttpClient<WeatherClient>();
+        builder.Services.AddTransient<WeatherTransport>();
 
         return builder;
     }
