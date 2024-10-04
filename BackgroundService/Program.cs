@@ -1,6 +1,6 @@
 using AzLogs.Ingestion;
-using AzLogs.Ingestion.Api;
 using AzLogs.Ingestion.Options;
+using AzLogs.Ingestion.WeatherApiClient;
 using Azure.Identity;
 using Microsoft.Extensions.Azure;
 

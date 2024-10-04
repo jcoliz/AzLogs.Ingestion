@@ -1,6 +1,6 @@
 using System.Net.Http.Headers;
 
-namespace AzLogs.Ingestion.Api;
+namespace AzLogs.Ingestion.WeatherApiClient;
 
 /// <summary>
 /// Auto-generated National Weather Service API client

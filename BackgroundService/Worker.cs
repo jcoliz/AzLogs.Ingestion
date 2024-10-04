@@ -1,7 +1,7 @@
 using System.Runtime.CompilerServices;
 using System.Text.Json;
-using AzLogs.Ingestion.Api;
 using AzLogs.Ingestion.Options;
+using AzLogs.Ingestion.WeatherApiClient;
 using Azure.Monitor.Ingestion;
 using Microsoft.Extensions.Options;
 
