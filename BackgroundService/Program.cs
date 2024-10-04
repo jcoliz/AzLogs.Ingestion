@@ -5,50 +5,19 @@ using Microsoft.Extensions.Azure;
 
 var builder = Host.CreateApplicationBuilder(args);
 
+// Optional source of local config secrets
 builder.Configuration.AddTomlFile("config.toml", optional: true, reloadOnChange: true);
 
-builder.Services.Configure<IdentityOptions>(
-    builder.Configuration.GetSection(IdentityOptions.Section)
-);
+// Set up the worker service
 builder.Services.Configure<WorkerOptions>(
     builder.Configuration.GetSection(WorkerOptions.Section)
 );
-builder.Services.Configure<LogIngestionOptions>(
-    builder.Configuration.GetSection(LogIngestionOptions.Section)
-);
-
 builder.Services.AddHostedService<Worker>();
 
-builder.Services.AddAzureClients(clientBuilder => 
-{
-    // Add a log ingestion client, using endpoint from configuration
-
-    LogIngestionOptions logOptions = new();
-    builder.Configuration.Bind(LogIngestionOptions.Section, logOptions);
-
-    clientBuilder.AddLogsIngestionClient(logOptions.EndpointUri);
-
-    // Add an Azure credential to the client, using details from configuration
-
-    // TODO: Is there not a better way to get client identity out of config??
-    IdentityOptions idOptions = new();
-    builder.Configuration.Bind(IdentityOptions.Section, idOptions);
-
-    clientBuilder.UseCredential
-    (
-        new ClientSecretCredential
-        (
-            tenantId: idOptions.TenantId.ToString(), 
-            clientId: idOptions.AppId.ToString(),
-            clientSecret: idOptions.AppSecret
-        )
-    );
-    // NOTE: In production, we would simply use: `clientBuilder.UseCredential(new DefaultAzureCredential());`
-    // which will use this application's managed identity (either as an App Service or Azure Function)
-});
-
+// Set up the services we depend on
 builder.AddWeatherApiClient();
+builder.AddLogsIngestionTransport();
 
+// And off we go!
 var host = builder.Build();
-
 await host.RunAsync();
