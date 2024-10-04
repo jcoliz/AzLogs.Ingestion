@@ -7,6 +7,7 @@
 //    * Data Collection Endpoint (DCE)
 //    * Data Collection Rule (DCR) with connection to DCE and LAW
 //    * Monitoring Metrics Publisher role on DCR for the Service Principal of your choice
+//    * Azure Function resource with Matrics 
 //
 
 @description('Unique suffix for all resources in this deployment')
@@ -25,8 +26,8 @@ param transformKql string
 @description('Columns of input schema')
 param inputColumns array
 
-@description('The principal that will be assigned Monitoring Metrics Publisher role for the Data Collection Rule resource')
-param principalId string
+@description('Optional additional principal that will be assigned Monitoring Metrics Publisher role for the Data Collection Rule resource')
+param principalId string = ''
 
 @description('The type of the given principal')
 param principalType string = 'ServicePrincipal'
@@ -81,7 +82,7 @@ module dcr 'AzDeploy.Bicep/Insights/datacollectionrule.bicep' = {
 
 // Deploy Monitoring Metrics Publisher role on DCR for supplied Service Principal
 
-module publisherRole 'AzDeploy.Bicep/Insights/monitoring-metrics-publisher-role.bicep' = {
+module publisherRole 'AzDeploy.Bicep/Insights/monitoring-metrics-publisher-role.bicep' = if (!empty(principalId)) {
   name: 'publisherRole'
   params: {
     dcrName: dcr.outputs.name
@@ -90,9 +91,26 @@ module publisherRole 'AzDeploy.Bicep/Insights/monitoring-metrics-publisher-role.
   }
 }
 
-// Return necessary outputs to user. Put these in `LogIngestion` section
-// of application configuration, e.g. `config.toml` 
+// Deploy an Azure Function, with storage, and with a connection to this DCR
 
+module logsfn './fn-loganalytics.bicep' = {
+  name: 'logsfn'
+  params: {    
+    suffix: suffix
+    location: location
+    dcrName: dcr.outputs.name
+    endpointName: dcep.outputs.name
+    streamName: dcr.outputs.Stream
+  }
+}
+
+// Return necessary outputs to user. Put these in `local.settings.json
+
+// "LogIngestion__DcrImmutableId": "<below value>"
 output DcrImmutableId string = dcr.outputs.DcrImmutableId
+
+// "LogIngestion__EndpointUri": "<below value>"
 output EndpointUri string = dcep.outputs.EndpointUri
+
+// "LogIngestion__Stream": "<below value>"
 output Stream string = dcr.outputs.Stream
