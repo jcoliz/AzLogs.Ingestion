@@ -21,6 +21,7 @@ namespace AzLogs.Ingestion;
 public partial class Worker(
     WeatherClient weatherClient, 
     LogsIngestionClient logsClient,
+    IOptions<WorkerOptions> workerOptions,
     IOptions<WeatherOptions> weatherOptions, 
     IOptions<LogIngestionOptions> logOptions,
     ILogger<Worker> logger
@@ -46,7 +47,7 @@ public partial class Worker(
                 {
                     await UploadToLogsAsync(forecast, stoppingToken).ConfigureAwait(false);
                 }
-                await Task.Delay(weatherOptions.Value.Frequency, stoppingToken);
+                await Task.Delay(workerOptions.Value.Frequency, stoppingToken);
             }
         }
         catch (TaskCanceledException)

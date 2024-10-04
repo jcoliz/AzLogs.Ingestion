@@ -11,6 +11,9 @@ builder.Configuration.AddTomlFile("config.toml", optional: true, reloadOnChange:
 builder.Services.Configure<IdentityOptions>(
     builder.Configuration.GetSection(IdentityOptions.Section)
 );
+builder.Services.Configure<WorkerOptions>(
+    builder.Configuration.GetSection(WorkerOptions.Section)
+);
 builder.Services.Configure<WeatherOptions>(
     builder.Configuration.GetSection(WeatherOptions.Section)
 );
