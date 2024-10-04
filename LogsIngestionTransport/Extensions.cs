@@ -1,3 +1,4 @@
+using AzLogs.Ingestion.LogsIngestionTransport;
 using AzLogs.Ingestion.Options;
 using Azure.Identity;
 using Microsoft.Extensions.Azure;
@@ -21,6 +22,8 @@ public static class LogsIngeestionTransportExtensions
         builder.Services.Configure<LogIngestionOptions>(
             builder.Configuration.GetSection(LogIngestionOptions.Section)
         );
+
+        builder.Services.AddTransient<LogsTransport>();
 
         builder.Services.AddAzureClients(clientBuilder => 
         {

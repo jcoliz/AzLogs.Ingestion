@@ -1,8 +1,8 @@
 using System.Runtime.CompilerServices;
 using System.Text.Json;
+using AzLogs.Ingestion.LogsIngestionTransport;
 using AzLogs.Ingestion.Options;
 using AzLogs.Ingestion.WeatherApiClient;
-using Azure.Monitor.Ingestion;
 using Microsoft.Extensions.Options;
 
 namespace AzLogs.Ingestion;
@@ -20,10 +20,9 @@ namespace AzLogs.Ingestion;
 /// <param name="logger">Where to send application logs</param>
 public partial class Worker(
     WeatherClient weatherClient, 
-    LogsIngestionClient logsClient,
+    LogsTransport transport,
     IOptions<WorkerOptions> workerOptions,
     IOptions<WeatherOptions> weatherOptions, 
-    IOptions<LogIngestionOptions> logOptions,
     ILogger<Worker> logger
     ) : BackgroundService
 {
@@ -45,7 +44,7 @@ public partial class Worker(
                 var forecast = await FetchForecastAsync(stoppingToken).ConfigureAwait(false);
                 if (forecast is not null)
                 {
-                    await UploadToLogsAsync(forecast, stoppingToken).ConfigureAwait(false);
+                    await transport.UploadToLogsAsync(forecast, stoppingToken).ConfigureAwait(false);
                 }
                 await Task.Delay(workerOptions.Value.Frequency, stoppingToken);
             }
@@ -100,59 +99,11 @@ public partial class Worker(
         return result;
     }
 
-    /// <summary>
-    /// Send forecast up to Log Analytics
-    /// </summary>
-    /// <param name="period">Forecast data received from NWS</param>
-    /// <param name="stoppingToken">Cancellation token</param>
-    private async Task UploadToLogsAsync(GridpointForecastPeriod period, CancellationToken stoppingToken)
-    {
-        try
-        {
-            var response = await logsClient.UploadAsync
-            (
-                ruleId: logOptions.Value.DcrImmutableId, 
-                streamName: logOptions.Value.Stream,
-                logs: [ period ],
-                cancellationToken: stoppingToken
-            )
-            .ConfigureAwait(false);
-
-            switch (response?.IsError)
-            {
-                case null:
-                    logSendNoResponse();
-                    break;
-
-                case true:
-                    logSendFail(response.Status);
-                    break;
-
-                default:
-                    logSentOk(response.Status);
-                    break;
-            }
-        }
-        catch (Exception ex)
-        {
-            logFail(ex);
-        }
-    }
-
     [LoggerMessage(Level = LogLevel.Information, Message = "{Location}: Received OK {Result}", EventId = 1010)]
     public partial void logReceivedOk(string result, [CallerMemberName] string? location = null);
 
     [LoggerMessage(Level = LogLevel.Error, Message = "{Location}: Received malformed response", EventId = 1018)]
     public partial void logReceivedMalformed([CallerMemberName] string? location = null);
-
-    [LoggerMessage(Level = LogLevel.Information, Message = "{Location}: Sent OK {Status}", EventId = 1020)]
-    public partial void logSentOk(int Status, [CallerMemberName] string? location = null);
-
-    [LoggerMessage(Level = LogLevel.Error, Message = "{Location}: Send failed, returned no response", EventId = 1027)]
-    public partial void logSendNoResponse([CallerMemberName] string? location = null);
-
-    [LoggerMessage(Level = LogLevel.Error, Message = "{Location}: Send failed {Status}", EventId = 1028)]
-    public partial void logSendFail(int Status, [CallerMemberName] string? location = null);
 
     [LoggerMessage(Level = LogLevel.Error, Message = "{Location}: Failed", EventId = 1008)]
     public partial void logFail(Exception ex, [CallerMemberName] string? location = null);
