@@ -14,7 +14,7 @@ namespace FunctionApp
         }
 
         [Function("TransferLogs")]
-        public void Run([TimerTrigger("0 */5 * * * *")] TimerInfo myTimer)
+        public void Run([TimerTrigger("*/5 * * * * *")] TimerInfo myTimer)
         {
             _logger.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
             
