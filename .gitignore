@@ -19,6 +19,7 @@
 # Deployment-specific secrets
 config.toml
 *.config.toml
+local.settings.json
 
 # Mono auto generated files
 mono_crash.*
