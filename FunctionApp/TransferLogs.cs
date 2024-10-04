@@ -1,4 +1,5 @@
 using System.Runtime.CompilerServices;
+using AzLogs.Ingestion.LogsIngestionTransport;
 using AzLogs.Ingestion.WeatherApiClient;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
@@ -7,6 +8,7 @@ namespace FunctionApp
 {
     public partial class TransferLogs(
         WeatherTransport weatherTransport, 
+        LogsTransport logsTransport,
         ILogger<TransferLogs> _logger
     )
     {
@@ -17,8 +19,12 @@ namespace FunctionApp
         {
             try
             {
-                _ = await weatherTransport.FetchForecastAsync(CancellationToken.None).ConfigureAwait(false);
-                
+                var forecast = await weatherTransport.FetchForecastAsync(CancellationToken.None).ConfigureAwait(false);
+                if (forecast is not null)
+                {
+                    await logsTransport.UploadToLogsAsync(forecast, CancellationToken.None).ConfigureAwait(false);
+                }
+
                 logOk();
                 
                 if (myTimer.ScheduleStatus is not null)

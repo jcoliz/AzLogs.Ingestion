@@ -41,4 +41,35 @@ public static class LogsIngeestionTransportExtensions
 
         return builder;
     }
+
+    /// <summary>
+    /// Add services for LogsIngestionTransport
+    /// </summary>
+    /// <param name="builder">Existing application builder</param>
+    /// <returns>Updated application builder</returns>
+    public static IHostBuilder AddLogsIngestionTransport(this IHostBuilder builder, TokenCredential token)
+    {
+        builder.ConfigureServices((context, services) => {
+
+            services.Configure<LogIngestionOptions>(
+                context.Configuration.GetSection(LogIngestionOptions.Section)
+            );
+
+            services.AddTransient<LogsTransport>();
+
+            services.AddAzureClients(clientBuilder => 
+            {
+                // Add a log ingestion client, using endpoint from configuration
+
+                LogIngestionOptions logOptions = new();
+                context.Configuration.Bind(LogIngestionOptions.Section, logOptions);
+
+                clientBuilder.AddLogsIngestionClient(logOptions.EndpointUri);
+
+                // Add the desired Azure credential to the client
+                clientBuilder.UseCredential(token);
+            });
+        });
+        return builder;
+    }        
 }

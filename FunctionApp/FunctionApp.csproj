@@ -30,5 +30,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WeatherApiClient\WeatherApiClient.csproj" />
+    <ProjectReference Include="..\LogsIngestionTransport\LogsIngestionTransport.csproj" />
   </ItemGroup>
 </Project>

@@ -1,6 +1,7 @@
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Azure.Identity;
 
 var host = new HostBuilder()
     .ConfigureFunctionsWebApplication()
@@ -9,6 +10,7 @@ var host = new HostBuilder()
         services.ConfigureFunctionsApplicationInsights();
     })
     .AddWeatherApiClient()
+    .AddLogsIngestionTransport(new DefaultAzureCredential())
     .Build();
 
 host.Run();
