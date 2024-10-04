@@ -1,6 +1,5 @@
 using AzLogs.Ingestion;
 using AzLogs.Ingestion.Options;
-using AzLogs.Ingestion.WeatherApiClient;
 using Azure.Identity;
 using Microsoft.Extensions.Azure;
 
@@ -14,14 +13,10 @@ builder.Services.Configure<IdentityOptions>(
 builder.Services.Configure<WorkerOptions>(
     builder.Configuration.GetSection(WorkerOptions.Section)
 );
-builder.Services.Configure<WeatherOptions>(
-    builder.Configuration.GetSection(WeatherOptions.Section)
-);
 builder.Services.Configure<LogIngestionOptions>(
     builder.Configuration.GetSection(LogIngestionOptions.Section)
 );
 
-builder.Services.AddHttpClient<WeatherClient>();
 builder.Services.AddHostedService<Worker>();
 
 builder.Services.AddAzureClients(clientBuilder => 
@@ -51,6 +46,8 @@ builder.Services.AddAzureClients(clientBuilder =>
     // NOTE: In production, we would simply use: `clientBuilder.UseCredential(new DefaultAzureCredential());`
     // which will use this application's managed identity (either as an App Service or Azure Function)
 });
+
+builder.AddWeatherApiClient();
 
 var host = builder.Build();
 
