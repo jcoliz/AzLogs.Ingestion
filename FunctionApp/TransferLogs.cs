@@ -1,10 +1,11 @@
 using System;
+using System.Runtime.CompilerServices;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 
 namespace FunctionApp
 {
-    public class TransferLogs
+    public partial class TransferLogs
     {
         private readonly ILogger _logger;
 
@@ -16,12 +17,28 @@ namespace FunctionApp
         [Function("TransferLogs")]
         public void Run([TimerTrigger("*/5 * * * * *")] TimerInfo myTimer)
         {
-            _logger.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
-            
-            if (myTimer.ScheduleStatus is not null)
+            try
             {
-                _logger.LogInformation($"Next timer schedule at: {myTimer.ScheduleStatus.Next}");
+                logOk();
+                
+                if (myTimer.ScheduleStatus is not null)
+                {
+                    logNextTimer(myTimer.ScheduleStatus.Next);
+                }
+            }
+            catch (Exception ex)
+            {
+                logFail(ex);
             }
         }
+
+        [LoggerMessage(Level = LogLevel.Information, Message = "{Location}: OK", EventId = 1000)]
+        public partial void logOk([CallerMemberName] string? location = null);
+
+        [LoggerMessage(Level = LogLevel.Debug, Message = "{Location}: Next timer at {Moment}", EventId = 1008)]
+        public partial void logNextTimer(DateTime Moment, [CallerMemberName] string? location = null);
+
+        [LoggerMessage(Level = LogLevel.Error, Message = "{Location}: Failed", EventId = 1008)]
+        public partial void logFail(Exception ex, [CallerMemberName] string? location = null);        
     }
 }
