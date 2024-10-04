@@ -1,5 +1,6 @@
 using AzLogs.Ingestion.LogsIngestionTransport;
 using AzLogs.Ingestion.Options;
+using Azure.Core;
 using Azure.Identity;
 using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.Configuration;
@@ -17,7 +18,7 @@ public static class LogsIngeestionTransportExtensions
     /// </summary>
     /// <param name="builder">Target to add</param>
     /// <returns>Same target returned</returns>
-    public static IHostApplicationBuilder AddLogsIngestionTransport(this IHostApplicationBuilder builder)
+    public static IHostApplicationBuilder AddLogsIngestionTransport(this IHostApplicationBuilder builder, TokenCredential token)
     {
         builder.Services.Configure<LogIngestionOptions>(
             builder.Configuration.GetSection(LogIngestionOptions.Section)
@@ -34,23 +35,8 @@ public static class LogsIngeestionTransportExtensions
 
             clientBuilder.AddLogsIngestionClient(logOptions.EndpointUri);
 
-            // Add an Azure credential to the client, using details from configuration
-
-            // TODO: Is there not a better way to get client identity out of config??
-            IdentityOptions idOptions = new();
-            builder.Configuration.Bind(IdentityOptions.Section, idOptions);
-
-            clientBuilder.UseCredential
-            (
-                new ClientSecretCredential
-                (
-                    tenantId: idOptions.TenantId.ToString(), 
-                    clientId: idOptions.AppId.ToString(),
-                    clientSecret: idOptions.AppSecret
-                )
-            );
-            // NOTE: In production, we would simply use: `clientBuilder.UseCredential(new DefaultAzureCredential());`
-            // which will use this application's managed identity (either as an App Service or Azure Function)
+            // Add the desired Azure credential to the client
+            clientBuilder.UseCredential(token);
         });
 
         return builder;

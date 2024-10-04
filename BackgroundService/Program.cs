@@ -14,9 +14,22 @@ builder.Services.Configure<WorkerOptions>(
 );
 builder.Services.AddHostedService<Worker>();
 
-// Set up the services we depend on
+// Set up weather service
 builder.AddWeatherApiClient();
-builder.AddLogsIngestionTransport();
+
+// Set up logs transport with Azure identity as specified in config
+IdentityOptions idOptions = new();
+builder.Configuration.Bind(IdentityOptions.Section, idOptions);
+builder.AddLogsIngestionTransport(
+    // NOTE: In production, we would simply use `new DefaultAzureCredential()`
+    // which will use this application's managed identity (either as an App Service or Azure Function)
+    new ClientSecretCredential
+    (
+        tenantId: idOptions.TenantId.ToString(), 
+        clientId: idOptions.AppId.ToString(),
+        clientSecret: idOptions.AppSecret
+    )
+);
 
 // And off we go!
 var host = builder.Build();
