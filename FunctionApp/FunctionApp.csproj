@@ -28,4 +28,7 @@
   <ItemGroup>
     <Using Include="System.Threading.ExecutionContext" Alias="ExecutionContext" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WeatherApiClient\WeatherApiClient.csproj" />
+  </ItemGroup>
 </Project>

@@ -1,24 +1,24 @@
-using System;
 using System.Runtime.CompilerServices;
+using AzLogs.Ingestion.WeatherApiClient;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 
 namespace FunctionApp
 {
-    public partial class TransferLogs
+    public partial class TransferLogs(
+        WeatherTransport weatherTransport, 
+        ILogger<TransferLogs> _logger
+    )
     {
-        private readonly ILogger _logger;
-
-        public TransferLogs(ILoggerFactory loggerFactory)
-        {
-            _logger = loggerFactory.CreateLogger<TransferLogs>();
-        }
+        private readonly ILogger logger = _logger;
 
         [Function("TransferLogs")]
-        public void Run([TimerTrigger("*/5 * * * * *")] TimerInfo myTimer)
+        public async Task Run([TimerTrigger("*/10 * * * * *")] TimerInfo myTimer)
         {
             try
             {
+                _ = await weatherTransport.FetchForecastAsync(CancellationToken.None).ConfigureAwait(false);
+                
                 logOk();
                 
                 if (myTimer.ScheduleStatus is not null)
