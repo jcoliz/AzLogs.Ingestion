@@ -240,7 +240,7 @@ You'll need to [Install the Azure Functions Core Tools](https://learn.microsoft.
 The Azure Function Core tools use `local.settings.json` to store local configuration, including secrets. Much like the `config.toml` in the previous steps, this
 file is not committed to source control. Copy [local.settings.template.json](./FunctionApp/local.settings.template.json) to a new file named `local.settings.json`, and fill out the details. The information needed is the same as previously set in `config.toml`.
 
-The one additional piece of information you'll need in a connection string to the Azure Blob Storage where configuration is stored for the function information. You can retrieve this using the Azure CLI, using the name of the storage resource. This was displayed after you deployed resources above as the `StorageName` output.
+The one additional piece of information you'll need in a connection string to the Storage Account where configuration is stored for the function information. You can retrieve this using the Azure CLI, using the name of the storage resource. This was displayed after you deployed resources above as the `StorageName` output.
 
 ```dotnetcli
 az storage account show-connection-string --name <StorageName>
