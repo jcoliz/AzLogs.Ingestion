@@ -77,13 +77,13 @@ The piece you're looking for is the `id` field.
 When you're done, you'll have four key pieces of information
 
 * Tenant ID
-* Client ID
-* Client Secret
+* Client ID (aka 'appId')
+* Client Secret (aka 'password')
 * Service Principal ID
 
 ## Deploy Azure resources
 
-This sample requires five Azure resources: Log Analytics Workspace, Data Collection Rule, and Data Collection Endpoint, Azure Function, and Blob Storage. There is an Azure Resource Manager (ARM) template to set up everything you need, ready to go: [azlogs-ingestion-fn.bicep](./.azure/deploy/azlogs-ingestion-fn.bicep).
+This sample requires five Azure resources: Log Analytics Workspace, Data Collection Rule, and Data Collection Endpoint, Azure Function, and Storage Account. There is an Azure Resource Manager (ARM) template here to set up everything you need, ready to go: [azlogs-ingestion-fn.bicep](./.azure/deploy/azlogs-ingestion-fn.bicep).
 Did you clone this repo with submodules? If not, now is the time to init and update submodules so you have the [AzDeploy.Bicep](https://github.com/jcoliz/AzDeploy.Bicep) project handy with the
 necessary module templates.
 
@@ -147,12 +147,12 @@ Look for the `outputs` section of the deployment. Please refer the configuration
 
 ## Configuration
 
-Once you have everyhing above running, you'll need to configure the sample with the App Registration you completed initially,
+Once you have deployed your Azure resources, you'll need to configure the sample with the App Registration you completed initially,
 as well as the details on your Data Collection Rule. You could follow the practices outlined in
 [Safe storage of app secrets in development in ASP.NET Core](https://learn.microsoft.com/en-us/aspnet/core/security/app-secrets).
 
 Alternately, you can create a `config.toml` file containing these secrets in the `BackgroundService` folder. This file will not be committed to source control.
-To begin, copy the existing `config.template.toml` file to a new file named `config.toml`. Then fill this in with the values unique to your deployment.
+To begin, copy the existing [config.template.toml](./BackgroundService/config.template.toml) file to a new file named `config.toml`. Then fill this in with the values unique to your deployment.
 
 ```toml
 [Identity]
