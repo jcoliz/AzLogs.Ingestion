@@ -14,7 +14,7 @@ builder.Services.Configure<WorkerOptions>(
 );
 builder.Services.AddHostedService<Worker>();
 
-// Set up weather service
+// Set up weather client and transport
 builder.AddWeatherApiClient();
 
 // Set up logs transport with Azure identity as specified in config
@@ -31,6 +31,6 @@ builder.AddLogsIngestionTransport(
     )
 );
 
-// And off we go!
+// Off we go!
 var host = builder.Build();
 await host.RunAsync();

@@ -52,6 +52,8 @@ public partial class Worker(
         }
         catch (Exception ex)
         {
+            // If an error gets here, it's critical. Transports are expected 
+            // to handle errors internally
             logCriticalFail(ex);
         }
     }

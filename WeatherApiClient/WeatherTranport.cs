@@ -5,6 +5,12 @@ using Microsoft.Extensions.Options;
 
 namespace AzLogs.Ingestion.WeatherApiClient;
 
+/// <summary>
+/// Service to fetch Weather forecasts according to application configuration
+/// </summary>
+/// <param name="client">Underlying client to use for connection</param>
+/// <param name="options">Options describing where we want the forecasts</param>
+/// <param name="logger">Where to send application logs</param>
 public partial class WeatherTransport(
         WeatherClient client,
         IOptions<WeatherOptions> options, 
