@@ -260,11 +260,25 @@ dotnet build
 func host start
 ```
 
-We can watch the function running locally. To further confirm, we can go back to look at the the Azure Monitor metrics for the DCR.
+We can watch the function running locally.
 
 ```text
-TODO: Logs
+Azure Functions Core Tools
+Core Tools Version:       4.0.6280 Commit hash: N/A +421f0144b42047aa289ce691dc6db4fc8b6143e6 (64-bit)
+Function Runtime Version: 4.834.3.22875
+
+[2024-10-07T21:08:37.740Z] Found AzLogs.Ingestion\FunctionApp\FunctionApp.csproj. Using for user secrets file configuration.
+[2024-10-07T21:08:41.503Z] Worker process started and initialized.
+[2024-10-07T21:08:50.040Z] Executing 'Functions.TransferLogs' (Reason='Timer fired at 2024-10-07T14:08:50.0203981-07:00', Id=9113238c-28cc-4e95-8e40-ca6ed1c49f18)
+[2024-10-07T21:08:50.260Z] FetchForecastAsync: Received OK {"number":1,"name":"This Afternoon","startTime":"2024-10-07T13:00:00-07:00","endTime":"2024-10-07T18:00:00-07:00","isDaytime":true,"temperature":74,"temperatureUnit":"F","temperatureTrend":"","probabilityOfPrecipitation":{"value":null,"maxValue":0,"minValue":0,"unitCode":"wmoUnit:percent","qualityControl":"Z"},"dewpoint":null,"relativeHumidity":null,"windSpeed":"6 mph","windGust":null,"windDirection":"S","icon":"https://api.weather.gov/icons/land/day/few?size=medium","shortForecast":"Sunny","detailedForecast":"Sunny, with a high near 74. South wind around 6 mph."}
+[2024-10-07T21:08:50.285Z] ClientSecretCredential.GetToken invoked. Scopes: [ https://monitor.azure.com//.default ] ParentRequestId: cffc2485-1fda-4770-8887-5e48b917c0c0
+[2024-10-07T21:08:51.010Z] Request [cffc2485-1fda-4770-8887-5e48b917c0c0] POST https://dcep-redacted.westus2-1.ingest.monitor.azure.com/dataCollectionRules/dcr-redacted/streams/Custom-Forecasts_CL?api-version=2023-01-01
+[2024-10-07T21:08:51.439Z] UploadToLogsAsync: Sent OK 204
+[2024-10-07T21:08:51.439Z] Run: OK
+[2024-10-07T21:08:51.460Z] Executed 'Functions.TransferLogs' (Succeeded, Id=9113238c-28cc-4e95-8e40-ca6ed1c49f18, Duration=1432ms)
 ```
+
+To further confirm, we can go back to look at the the Azure Monitor metrics for the DCR, as described above
 
 ### Publish and run remotely
 
