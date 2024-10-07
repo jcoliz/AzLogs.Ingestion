@@ -83,7 +83,7 @@ When you're done, you'll have four key pieces of information
 
 ## Deploy Azure resources
 
-This sample requires five Azure resources: Log Analytics Workspace, Data Collection Rule, and Data Collection Endpoint, Azure Function, and Blob Storage. There is an Azure Resource Manager (ARM) template to set up everything you need, ready to go: [azlogs-ingestion.bicep](./.azure/deploy/azlogs-ingestion-fn.bicep).
+This sample requires five Azure resources: Log Analytics Workspace, Data Collection Rule, and Data Collection Endpoint, Azure Function, and Blob Storage. There is an Azure Resource Manager (ARM) template to set up everything you need, ready to go: [azlogs-ingestion-fn.bicep](./.azure/deploy/azlogs-ingestion-fn.bicep).
 Did you clone this repo with submodules? If not, now is the time to init and update submodules so you have the [AzDeploy.Bicep](https://github.com/jcoliz/AzDeploy.Bicep) project handy with the
 necessary module templates.
 
@@ -108,7 +108,7 @@ az group create --name $env:RESOURCEGROUP --location "West US 2"
 Finally, the most important step, where we deploy our resources:
 
 ```powershell
-az deployment group create --name "Deploy-$(Get-Random)" --resource-group $env:RESOURCEGROUP --template-file .azure\deploy\azlogs-ingestion.bicep --parameters .azure\deploy\azlogs-ingestion.parameters.json
+az deployment group create --name "Deploy-$(Get-Random)" --resource-group $env:RESOURCEGROUP --template-file .azure\deploy\azlogs-ingestion-fn.bicep --parameters .azure\deploy\azlogs-ingestion.parameters.json
 ```
 
 You will be prompted to enter the Service Principal ID of the Entra App Registration you created earlier.
