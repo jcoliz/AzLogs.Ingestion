@@ -72,3 +72,6 @@ module publisherRole 'AzDeploy.Bicep/Insights/monitoring-metrics-publisher-role.
     principalType: 'ServicePrincipal'
   }
 }
+
+output functionAppName string = fn.outputs.functionAppName
+output storageName string = fn.outputs.storageName

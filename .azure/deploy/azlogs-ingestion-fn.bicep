@@ -6,8 +6,10 @@
 //    * Log Analytics Workspace (LAW) with custom table
 //    * Data Collection Endpoint (DCE)
 //    * Data Collection Rule (DCR) with connection to DCE and LAW
-//    * Monitoring Metrics Publisher role on DCR for the Service Principal of your choice
-//    * Azure Function resource with Matrics 
+//    * Azure Function app
+//    * Storage Account for Azure Function job management
+//    * Monitoring Metrics Publisher role on DCR for the function app
+//        and for the Service Principal of your choice
 //
 
 @description('Unique suffix for all resources in this deployment')
@@ -26,7 +28,7 @@ param transformKql string
 @description('Columns of input schema')
 param inputColumns array
 
-@description('Optional additional principal that will be assigned Monitoring Metrics Publisher role for the Data Collection Rule resource')
+@description('Additional principal that will be assigned Monitoring Metrics Publisher role for the Data Collection Rule resource')
 param principalId string
 
 @description('The type of the given principal')
@@ -104,7 +106,7 @@ module logsfn './fn-loganalytics.bicep' = {
   }
 }
 
-// Return necessary outputs to user. Put these in `local.settings.json
+// Return necessary outputs to user. Put the first three in `local.settings.json
 
 // "LogIngestion__DcrImmutableId": "<below value>"
 output DcrImmutableId string = dcr.outputs.DcrImmutableId
@@ -114,3 +116,9 @@ output EndpointUri string = dcep.outputs.EndpointUri
 
 // "LogIngestion__Stream": "<below value>"
 output Stream string = dcr.outputs.Stream
+
+// Name of function app resource, used to interact with Azure Functions Core Tools
+output functionAppName string = logsfn.outputs.functionAppName
+
+// Name of storage app resource, needed to obtain storage connection string
+output storageName string = logsfn.outputs.storageName

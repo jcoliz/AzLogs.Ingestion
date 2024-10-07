@@ -15,7 +15,7 @@ Let's say we have some important data available in an external service, and we w
 
 ## Architecture
 
-<p align="center"><img src="https://github.com/jcoliz/AzLogs.Ingestion/raw/main/docs/images/Architecture.png" alt="System Architecture"></p>
+<p align="center"><img src="https://raw.github.com/jcoliz/AzLogs.Ingestion/refs/heads/topic/azfn-2/docs/images/Architecture.png" alt="System Architecture"></p>
 
 This is a very simple, focused sample. Our Azure Function application sits at the center of the system, doing all the work.
 It periodically pulls data from an external source (here, weather.gov) then forwards it to a Log Analytics Workspace
@@ -34,9 +34,7 @@ This sample will first follow that article closely, before moving on to demonstr
 ## Register a Microsoft Entra app
 
 The very first step is to [Register an application with the Microsoft Identity Platform](https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app?tabs=client-secret). This is helpful for running the sample locally. 
-When running as an Azure Function, this app identity is not needed. Instead, the function app will use its [Managed Identity](https://learn.microsoft.com/en-us/azure/app-service/overview-managed-identity) to connect with the DCR.
-
-Be sure to also [Add a client secret](https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app?tabs=client-secret#add-credentials) as described on the page above. 
+When running as an Azure Function, this app identity is not needed. Instead, the function app will use its [Managed Identity](https://learn.microsoft.com/en-us/azure/app-service/overview-managed-identity) to connect with the DCR. Be sure to also [Add a client secret](https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app?tabs=client-secret#add-credentials) as described on the page above. 
 
 Alternately, you can follow these steps using the Azure CLI:
 
@@ -60,9 +58,9 @@ This produces critical information you'll need to record and later configure the
 
 ```dotnetcli
 {
-  "appId": "<Your app ID>",
-  "password": "<Your client secret>",
-  "tenant": "<Your tenant>"
+  "appId": "<client_id>",
+  "password": "<client_secret>",
+  "tenant": "<tenant_id>"
 }
 ```
 
@@ -70,7 +68,7 @@ After registering the application, either using the portal or CLI, you'll also n
 For more details, see [Application and service principal objects in Microsoft Entra ID](https://learn.microsoft.com/en-us/entra/identity-platform/app-objects-and-service-principals?tabs=azure-cli). The fastest way to get this is using the Azure CLI, supplying the Client ID for your new application.
 
 ```dotnetcli
-az ad sp list --filter "appId eq '<Your app ID>'"
+az ad sp list --filter "appId eq '<client_id>'"
 ```
 
 This displays a full list of information about the Service Principal for your application.
@@ -163,7 +161,7 @@ AppId = "<client_id>" # Application (client) ID
 AppSecret = "<client_secret>" # Client secret value
 
 [LogIngestion]
-EndpointUri = "https://<data_collection_endpoint_uri>/" # Data collection endpoint, be sure to include https://
+EndpointUri = "<data_collection_endpoint_uri>" # Data collection endpoint, be sure to include https://
 Stream = "<stream_name>" # The stream name to send to, usually `Custom-<table>_CL`
 DcrImmutableId = "<data_collection_rule_id>" # The Immutable ID for this Data Collection Rule 
 ```
@@ -247,7 +245,7 @@ The one additional piece of information you'll need in a connection string to th
 ```dotnetcli
 az storage account show-connection-string --name <StorageName>
 {
-  "connectionString": "<Storage Connection String>"
+  "connectionString": "<storage_connection_string>"
 }
 ```
 
@@ -281,6 +279,14 @@ Once it's complete, you can connect with the logstream and watch it at work
 ```dotnetcli
 func azure functionapp logstream <FunctionAppName>
 ```
+
+Unfortunately, at the current moment, the application fails to upload the data to the DCE, giving this result:
+
+```json
+{"Error":{"Code":"InvalidApiVersion","Message":"The api version is invalid. Allowed Api versions: 2021-11-01-preview,2023-04-24."}}
+```
+
+Track the details here: [[BUG] LogsIngestionClient.UploadAsync fails when running in Azure Function](https://github.com/Azure/azure-sdk-for-net/issues/46439)
 
 ## Tear down
 

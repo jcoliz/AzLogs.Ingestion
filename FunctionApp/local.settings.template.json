@@ -1,16 +1,16 @@
 {
     "IsEncrypted": false,
     "Values": {
-        "AzureWebJobsStorage":  "<Storage connection string>",
+        "AzureWebJobsStorage":  "<storage_connection_string>",
         "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
         "WEATHER__OFFICE": "SEW",
         "WEATHER__GRIDX": "124",
         "WEATHER__GRIDY": "69",
-        "LogIngestion__DcrImmutableId": "<Data Collection Rule ID>",
-        "LogIngestion__EndpointUri": "<Data Collection Endpoint Url>",
+        "LogIngestion__DcrImmutableId": "<data_collection_rule_id>",
+        "LogIngestion__EndpointUri": "<data_collection_endpoint_uri>",
         "LogIngestion__Stream": "Custom-Forecasts_CL",
-        "AZURE_TENANT_ID": "<App tenant ID>",
-        "AZURE_CLIENT_ID": "<App ID>",
-        "AZURE_CLIENT_SECRET": "<App Client Secret>"        
+        "AZURE_TENANT_ID": "<tenant_id>",
+        "AZURE_CLIENT_ID": "<client_id>",
+        "AZURE_CLIENT_SECRET": "<client_secret>"        
     }
 }
