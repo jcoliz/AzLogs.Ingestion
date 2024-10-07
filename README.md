@@ -45,13 +45,13 @@ az ad app create --display-name azlogs-ingestion --key-type Password --sign-in-a
 In the output of that command, look for the `AppId` field, which you'll need for the following step.
 
 ```json
-"appId": "<your app ID>",
+"appId": "<client_id>",
 ```
 
 Next, you'll need a client secret to connect:
 
 ```dotnetcli
-az ad app credential reset --id <your app ID>
+az ad app credential reset --id <client_id>
 ```
 
 This produces critical information you'll need to record and later configure the apps to connect.
