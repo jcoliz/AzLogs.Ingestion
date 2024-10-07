@@ -27,7 +27,7 @@ param transformKql string
 param inputColumns array
 
 @description('Optional additional principal that will be assigned Monitoring Metrics Publisher role for the Data Collection Rule resource')
-param principalId string = ''
+param principalId string
 
 @description('The type of the given principal')
 param principalType string = 'ServicePrincipal'

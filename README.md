@@ -3,7 +3,7 @@
 [![Build](https://github.com/jcoliz/AzLogs.Ingestion/actions/workflows/build.yml/badge.svg)](https://github.com/jcoliz/AzLogs.Ingestion/actions/workflows/build.yml)
 
 This is a fully-built sample using the [Logs Ingestion API in Azure Monitor](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/logs-ingestion-api-overview) on .NET 8.0.
-The sample retrieves weather forecasts from the U.S. [National Weather Service API](https://www.weather.gov/documentation/services-web-api), then forwards them on to a [Logs Analytics Workspace](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/log-analytics-workspace-overview) using a [Data Collection Rule](https://learn.microsoft.com/en-us/azure/azure-monitor/essentials/data-collection-rule-overview). It runs as a worker service on your local machine.
+The sample retrieves weather forecasts from the U.S. [National Weather Service API](https://www.weather.gov/documentation/services-web-api), then forwards them on to a [Logs Analytics Workspace](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/log-analytics-workspace-overview) using a [Data Collection Rule](https://learn.microsoft.com/en-us/azure/azure-monitor/essentials/data-collection-rule-overview). It can be deployed as an [Azure Function](https://learn.microsoft.com/en-us/azure/azure-functions/functions-overview?pivots=programming-language-csharp) or run as a worker service on your local machine.
 
 ## Use case
 
@@ -17,12 +17,9 @@ Let's say we have some important data available in an external service, and we w
 
 <p align="center"><img src="https://github.com/jcoliz/AzLogs.Ingestion/raw/main/docs/images/Architecture.png" alt="System Architecture"></p>
 
-This is a very simple, focused sample. Our application sits at the center of the system, doing all the work.
-It pulls data from an external source (here, weather.gov) then forwards it to a Log Analytics Workspace
+This is a very simple, focused sample. Our Azure Function application sits at the center of the system, doing all the work.
+It periodically pulls data from an external source (here, weather.gov) then forwards it to a Log Analytics Workspace
 using a Data Collection Endpoint and Data Collection Rule.
-
-Although the application runs locally in this sample,
-it would be very simple to run it as an Azure Function regularly pumping the external data through the system.
 
 ## Prerequisites
 
@@ -32,17 +29,48 @@ In order to follow the instructions shown here, and run this sample, you will fi
 * [Azure CLI tool with Bicep](https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/install#azure-cli)
 
 Please read through the [Logs Ingestion API in Azure Monitor](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/logs-ingestion-api-overview) article carefully before proceeding.
-This sample will follow that article closely.
+This sample will first follow that article closely, before moving on to demonstrate deploying an Azure Function.
 
 ## Register a Microsoft Entra app
 
-The very first step is to [Register an application with the Microsoft Identity Platform](https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app?tabs=client-secret) following the steps in that article. Be sure to [Add a client secret](https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app?tabs=client-secret#add-credentials) as described on that page.
+The very first step is to [Register an application with the Microsoft Identity Platform](https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app?tabs=client-secret). This is helpful for running the sample locally. 
+When running as an Azure Function, this app identity is not needed. Instead, the function app will use its [Managed Identity](https://learn.microsoft.com/en-us/azure/app-service/overview-managed-identity) to connect with the DCR.
 
-After registering the application, you'll also need the Service Principal ID.
+Be sure to also [Add a client secret](https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app?tabs=client-secret#add-credentials) as described on the page above. 
+
+Alternately, you can follow these steps using the Azure CLI:
+
+```dotnetcli
+az ad app create --display-name azlogs-ingestion --key-type Password --sign-in-audience AzureADMyOrg
+```
+
+In the output of that command, look for the `AppId` field, which you'll need for the following step.
+
+```json
+"appId": "<your app ID>",
+```
+
+Next, you'll need a client secret to connect:
+
+```dotnetcli
+az ad app credential reset --id <your app ID>
+```
+
+This produces critical information you'll need to record and later configure the apps to connect.
+
+```dotnetcli
+{
+  "appId": "<Your app ID>",
+  "password": "<Your client secret>",
+  "tenant": "<Your tenant>"
+}
+```
+
+After registering the application, either using the portal or CLI, you'll also need the Service Principal ID.
 For more details, see [Application and service principal objects in Microsoft Entra ID](https://learn.microsoft.com/en-us/entra/identity-platform/app-objects-and-service-principals?tabs=azure-cli). The fastest way to get this is using the Azure CLI, supplying the Client ID for your new application.
 
 ```dotnetcli
-az ad sp list --filter "appId eq '{Client ID}'"
+az ad sp list --filter "appId eq '<Your app ID>'"
 ```
 
 This displays a full list of information about the Service Principal for your application.
@@ -57,11 +85,7 @@ When you're done, you'll have four key pieces of information
 
 ## Deploy Azure resources
 
-This sample requires three Azure resources: Log Analytics Workspace, Data Collection Rule, and Data Collection Endpoint.
-If you're setting them up in the Azure Portal, the easiest way is create a new Log Analytics resource, then create a custom table.
-That flow will lead you down the path of creating a Data Collection Rule with a Data Collection Endpoint.
-
-However, for this sample, there's an even easier way. Here you will find an Azure Resource Manager (ARM) template to set up everything you need, ready to go: [azlogs-ingestion.bicep](./.azure/deploy/azlogs-ingestion.bicep).
+This sample requires five Azure resources: Log Analytics Workspace, Data Collection Rule, and Data Collection Endpoint, Azure Function, and Blob Storage. There is an Azure Resource Manager (ARM) template to set up everything you need, ready to go: [azlogs-ingestion.bicep](./.azure/deploy/azlogs-ingestion-fn.bicep).
 Did you clone this repo with submodules? If not, now is the time to init and update submodules so you have the [AzDeploy.Bicep](https://github.com/jcoliz/AzDeploy.Bicep) project handy with the
 necessary module templates.
 
@@ -95,7 +119,7 @@ You will be prompted to enter the Service Principal ID of the Entra App Registra
 Please provide string value for 'principalId' (? for help): 
 ```
 
-After the deployment completes, take note of the outputs from this deployment. You will use these values to configure the sample so it points to your newly-provisioned resources.
+After the deployment completes, take note of the outputs from this deployment. You will use some of these values to configure the sample so it points to your newly-provisioned resources.
 Look for the `outputs` section of the deployment. Please refer the configuration section below to find where to put them.
 
 ```json
@@ -111,6 +135,14 @@ Look for the `outputs` section of the deployment. Please refer the configuration
   "Stream": {
     "type": "String",
     "value": "Custom-Forecasts_CL"
+  },
+  "StorageName": {
+    "type": "String",
+    "value": "storage000redacted"
+  },
+  "FunctionAppName": {
+    "type": "String",
+    "value": "fn-redacted"
   }
 },
 ```
@@ -144,7 +176,9 @@ checking once every 5 seconds. You can find these values in `appsettings.json`.
 "Weather": {
   "Office": "SEW",
   "GridX": 124,
-  "GridY": 69,
+  "GridY": 69
+},
+"Worker": {
   "Frequency": "00:00:05"
 }
 ```
@@ -154,7 +188,7 @@ endpoint. The NWS has a handy Swagger UI on its API page, so you can try these o
 
 Frequency is described in in Hours:Minutes:Seconds.
 
-## Running
+## Running Locally
 
 Once you have all that set up, simply build and run the `BackgroundService` project!
 
@@ -192,7 +226,61 @@ If all is well, you will see a chart like the one below:
 
 ![Log Analytics Workspace Query](./docs/images/logs-query.png)
 
-Congratulations, you have successfully ingested logs into a Log Analytics Workspace custom table using a Data Collection Rule!
+Congratulations, you have successfully ingested logs into a Log Analytics Workspace custom table using a Data Collection Rule! Now we can move on to running as a function app.
+
+## Function App Locally
+
+We will now run the same code as above, built as an Azure Function. For this section, you'll need to have a
+Terminal Window open, in the `FunctionApp` folder.
+
+### Install Tools
+
+You'll need to [Install the Azure Functions Core Tools](https://learn.microsoft.com/en-us/azure/azure-functions/functions-run-local?tabs=windows%2Cisolated-process%2Cnode-v4%2Cpython-v2%2Chttp-trigger%2Ccontainer-apps&pivots=programming-language-csharp#install-the-azure-functions-core-tools) to follow the remaining steps in this article.
+
+### Set up local configuration
+
+The Azure Function Core tools use a file named `local.settings.json` to store local configuration, including secrets. Much like the `config.toml` in the previous steps, this
+file is not committed to source control. Copy the `local.settings.template.json` file to a new file named `local.settings.json`, and fill out the details. The information needed is the same as previously set in `config.toml`.
+
+The one additional piece of information you'll need in a connection string to the Azure Blob Storage where configuration is stored for the function information. You can retrieve this using the Azure CLI, using the name of the storage resource. This was displayed after you deployed resources above as the `StorageName` output.
+
+```dotnetcli
+az storage account show-connection-string --name <StorageName>
+{
+  "connectionString": "<Storage Connection String>"
+}
+```
+
+Add the strong shown here to the `AzureWebJobsStorage` field in `local.settings.json`.
+
+### Run locally
+
+We'll first build the app, then run it using the tools:
+
+```dotnetcli
+dotnet build
+func host start
+```
+
+We can watch the function running locally. To further confirm, we can go back to look at the the Azure Monitor metrics for the DCR.
+
+```
+TODO: Logs
+```
+
+### Deploy and run remotely
+
+Now that you can see it all running locally, it's time to deploy! You'll need the name of the function app which you deployed earlier. This was included in the outputs of the deployment, as the `FunctionAppName` output.
+
+```dotnetcli
+func azure functionapp publish <FunctionAppName>
+```
+
+Once it's complete, you can connect with the logstream and watch it at work
+
+```dotnetcli
+func azure functionapp logstream <FunctionAppName>
+```
 
 ## Tear down
 
