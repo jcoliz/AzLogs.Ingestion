@@ -29,7 +29,7 @@ In order to follow the instructions shown here, and run this sample, you will fi
 * [Azure CLI tool with Bicep](https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/install#azure-cli)
 
 Please read through the [Logs Ingestion API in Azure Monitor](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/logs-ingestion-api-overview) article carefully before proceeding.
-This sample will first follow that article closely, before moving on to demonstrate deploying an Azure Function.
+This sample will first follow that article closely, before moving on to demonstrate publishing an Azure Function.
 
 ## Register a Microsoft Entra app
 
@@ -282,7 +282,7 @@ To further confirm, we can go back to look at the the Azure Monitor metrics for 
 
 ### Publish and run remotely
 
-Now that you can see it all running locally, it's time to deploy! You'll need the name of the function app which you deployed earlier. This was included in the outputs of the deployment, as the `FunctionAppName` output.
+Now that you can see it all running locally, it's time to publish to Azure! You'll need the name of the function app which you deployed earlier. This was included in the outputs of the deployment, as the `FunctionAppName` output.
 
 ```dotnetcli
 func azure functionapp publish <FunctionAppName>
