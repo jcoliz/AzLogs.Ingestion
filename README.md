@@ -226,7 +226,7 @@ If all is well, you will see a chart like the one below:
 
 Congratulations, you have successfully ingested logs into a Log Analytics Workspace custom table using a Data Collection Rule! Now we can move on to running as a function app.
 
-## Function App Locally
+## Publish as an Azure Function
 
 We will now run the same code as above, built as an Azure Function. For this section, you'll need to have a
 Terminal Window open, in the `FunctionApp` folder.
@@ -237,8 +237,8 @@ You'll need to [Install the Azure Functions Core Tools](https://learn.microsoft.
 
 ### Set up local configuration
 
-The Azure Function Core tools use a file named `local.settings.json` to store local configuration, including secrets. Much like the `config.toml` in the previous steps, this
-file is not committed to source control. Copy the `local.settings.template.json` file to a new file named `local.settings.json`, and fill out the details. The information needed is the same as previously set in `config.toml`.
+The Azure Function Core tools use `local.settings.json` to store local configuration, including secrets. Much like the `config.toml` in the previous steps, this
+file is not committed to source control. Copy [local.settings.template.json](./FunctionApp/local.settings.template.json) to a new file named `local.settings.json`, and fill out the details. The information needed is the same as previously set in `config.toml`.
 
 The one additional piece of information you'll need in a connection string to the Azure Blob Storage where configuration is stored for the function information. You can retrieve this using the Azure CLI, using the name of the storage resource. This was displayed after you deployed resources above as the `StorageName` output.
 
@@ -266,7 +266,7 @@ We can watch the function running locally. To further confirm, we can go back to
 TODO: Logs
 ```
 
-### Deploy and run remotely
+### Publish and run remotely
 
 Now that you can see it all running locally, it's time to deploy! You'll need the name of the function app which you deployed earlier. This was included in the outputs of the deployment, as the `FunctionAppName` output.
 
