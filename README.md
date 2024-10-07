@@ -33,8 +33,8 @@ This sample will first follow that article closely, before moving on to demonstr
 
 ## Register a Microsoft Entra app
 
-The very first step is to [Register an application with the Microsoft Identity Platform](https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app?tabs=client-secret). This is helpful for running the sample locally. 
-When running as an Azure Function, this app identity is not needed. Instead, the function app will use its [Managed Identity](https://learn.microsoft.com/en-us/azure/app-service/overview-managed-identity) to connect with the DCR. Be sure to also [Add a client secret](https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app?tabs=client-secret#add-credentials) as described on the page above. 
+The very first step is to [Register an application with the Microsoft Identity Platform](https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app?tabs=client-secret). This is helpful for running the sample locally.
+When running in Azure, this app registration is not needed. Instead, the function app will use its [Managed Identity](https://learn.microsoft.com/en-us/azure/app-service/overview-managed-identity) to connect with the DCR. Be sure to also [Add a client secret](https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app?tabs=client-secret#add-credentials) as described on the page above.
 
 Alternately, you can follow these steps using the Azure CLI:
 
@@ -262,7 +262,7 @@ func host start
 
 We can watch the function running locally. To further confirm, we can go back to look at the the Azure Monitor metrics for the DCR.
 
-```
+```text
 TODO: Logs
 ```
 
