@@ -55,7 +55,7 @@ public partial class TransferLogs(
     [LoggerMessage(Level = LogLevel.Information, Message = "{Location}: OK", EventId = 1000)]
     public partial void logOk([CallerMemberName] string? location = null);
 
-    [LoggerMessage(Level = LogLevel.Debug, Message = "{Location}: Next timer at {Moment}", EventId = 1008)]
+    [LoggerMessage(Level = LogLevel.Debug, Message = "{Location}: Next timer at {Moment}", EventId = 1001)]
     public partial void logNextTimer(DateTime Moment, [CallerMemberName] string? location = null);
 
     [LoggerMessage(Level = LogLevel.Error, Message = "{Location}: Failed", EventId = 1008)]

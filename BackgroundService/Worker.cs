@@ -71,6 +71,6 @@ public partial class Worker(
         }
     }
 
-    [LoggerMessage(Level = LogLevel.Critical, Message = "{Location}: Critical Failure", EventId = 1009)]
+    [LoggerMessage(Level = LogLevel.Critical, Message = "{Location}: Critical Failure", EventId = 2009)]
     public partial void logCriticalFail(Exception ex, [CallerMemberName] string? location = null);
 }

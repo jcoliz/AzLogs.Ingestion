@@ -63,15 +63,15 @@ public partial class LogsTransport(
         }
     }
 
-    [LoggerMessage(Level = LogLevel.Information, Message = "{Location}: Sent OK {Status}", EventId = 1020)]
+    [LoggerMessage(Level = LogLevel.Information, Message = "{Location}: Sent OK {Status}", EventId = 1100)]
     public partial void logSentOk(int Status, [CallerMemberName] string? location = null);
 
-    [LoggerMessage(Level = LogLevel.Error, Message = "{Location}: Send failed, returned no response", EventId = 1027)]
+    [LoggerMessage(Level = LogLevel.Error, Message = "{Location}: Send failed, returned no response", EventId = 1106)]
     public partial void logSendNoResponse([CallerMemberName] string? location = null);
 
-    [LoggerMessage(Level = LogLevel.Error, Message = "{Location}: Send failed {Status}", EventId = 1028)]
+    [LoggerMessage(Level = LogLevel.Error, Message = "{Location}: Send failed {Status}", EventId = 1107)]
     public partial void logSendFail(int Status, [CallerMemberName] string? location = null);
 
-    [LoggerMessage(Level = LogLevel.Error, Message = "{Location}: Failed", EventId = 1008)]
+    [LoggerMessage(Level = LogLevel.Error, Message = "{Location}: Failed", EventId = 1108)]
     public partial void logFail(Exception ex, [CallerMemberName] string? location = null);
 }

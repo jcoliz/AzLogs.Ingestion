@@ -62,12 +62,12 @@ public partial class WeatherTransport(
         return result;
     }
 
-    [LoggerMessage(Level = LogLevel.Information, Message = "{Location}: Received OK {Result}", EventId = 1010)]
+    [LoggerMessage(Level = LogLevel.Information, Message = "{Location}: Received OK {Result}", EventId = 1200)]
     public partial void logReceivedOk(string result, [CallerMemberName] string? location = null);
 
-    [LoggerMessage(Level = LogLevel.Error, Message = "{Location}: Received malformed response", EventId = 1018)]
+    [LoggerMessage(Level = LogLevel.Error, Message = "{Location}: Received malformed response", EventId = 1207)]
     public partial void logReceivedMalformed([CallerMemberName] string? location = null);
 
-    [LoggerMessage(Level = LogLevel.Error, Message = "{Location}: Failed", EventId = 1008)]
+    [LoggerMessage(Level = LogLevel.Error, Message = "{Location}: Failed", EventId = 1208)]
     public partial void logFail(Exception ex, [CallerMemberName] string? location = null);
 }
