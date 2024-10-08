@@ -256,7 +256,6 @@ Add the strong shown here to the `AzureWebJobsStorage` field in `local.settings.
 We'll first build the app, then run it using the tools:
 
 ```dotnetcli
-dotnet build
 func host start
 ```
 
