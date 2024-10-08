@@ -46,30 +46,47 @@ public static class LogsIngeestionTransportExtensions
     /// Add services for LogsIngestionTransport
     /// </summary>
     /// <param name="builder">Existing application builder</param>
+    /// <param name="token">Token to use for long ingestion</param>
     /// <returns>Updated application builder</returns>
     public static IHostBuilder AddLogsIngestionTransport(this IHostBuilder builder, TokenCredential token)
     {
-        builder.ConfigureServices((context, services) => {
+        return builder.ConfigureServices((context, services) => 
+            ConfigureServices(context, services, token)
+        );
+    }
 
-            services.Configure<LogIngestionOptions>(
-                context.Configuration.GetSection(LogIngestionOptions.Section)
-            );
+    /// <summary>
+    /// Add services for LogsIngestionTransport
+    /// </summary>
+    /// <param name="builder">Existing application builder</param>
+    /// <param name="getTokenFunc">Function to get a Token to use for long ingestion</param>
+    /// <returns>Updated application builder</returns>
+    public static IHostBuilder AddLogsIngestionTransport(this IHostBuilder builder, Func<HostBuilderContext,TokenCredential> getTokenFunc)
+    {
+        return builder.ConfigureServices((context, services) => 
+            ConfigureServices(context, services, getTokenFunc(context))
+        );
+    }
 
-            services.AddTransient<LogsTransport>();
+    private static void ConfigureServices(HostBuilderContext context, IServiceCollection services, TokenCredential token)
+    {
+        services.Configure<LogIngestionOptions>(
+            context.Configuration.GetSection(LogIngestionOptions.Section)
+        );
 
-            services.AddAzureClients(clientBuilder => 
-            {
-                // Add a log ingestion client, using endpoint from configuration
+        services.AddTransient<LogsTransport>();
 
-                LogIngestionOptions logOptions = new();
-                context.Configuration.Bind(LogIngestionOptions.Section, logOptions);
+        services.AddAzureClients(clientBuilder =>
+        {
+            // Add a log ingestion client, using endpoint from configuration
 
-                clientBuilder.AddLogsIngestionClient(logOptions.EndpointUri);
+            LogIngestionOptions logOptions = new();
+            context.Configuration.Bind(LogIngestionOptions.Section, logOptions);
 
-                // Add the desired Azure credential to the client
-                clientBuilder.UseCredential(token);
-            });
+            clientBuilder.AddLogsIngestionClient(logOptions.EndpointUri);
+
+            // Add the desired Azure credential to the client
+            clientBuilder.UseCredential(token);
         });
-        return builder;
-    }        
+    }
 }
