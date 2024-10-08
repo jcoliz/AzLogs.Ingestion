@@ -1,4 +1,4 @@
-namespace AzLogs.Ingestion.WeatherApiClient;
+namespace AzLogs.Ingestion.WeatherTransport;
 
 /// <summary>
 /// Options for calling into Weather Service

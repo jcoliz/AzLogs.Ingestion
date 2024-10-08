@@ -1,6 +1,6 @@
 using System.Runtime.CompilerServices;
 using AzLogs.Ingestion.LogsIngestionTransport;
-using AzLogs.Ingestion.WeatherApiClient;
+using AzLogs.Ingestion.WeatherTransport;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 
