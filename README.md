@@ -15,7 +15,7 @@ Let's say we have some important data available in an external service, and we w
 
 ## Architecture
 
-<p align="center"><img src="https://raw.github.com/jcoliz/AzLogs.Ingestion/refs/heads/topic/azfn-2/docs/images/Architecture.png" alt="System Architecture"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/jcoliz/AzLogs.Ingestion/refs/heads/main/docs/images/Architecture.png" alt="System Architecture"></p>
 
 This is a very simple, focused sample. Our Azure Function application sits at the center of the system, doing all the work.
 It periodically pulls data from an external source (here, weather.gov) then forwards it to a Log Analytics Workspace
