@@ -1,4 +1,4 @@
-namespace AzLogs.Ingestion.Options;
+namespace AzLogs.Ingestion.LogsIngestionTransport;
 
 /// <summary>
 /// Options describing where logs should be sent

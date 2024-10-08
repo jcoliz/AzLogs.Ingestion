@@ -1,5 +1,4 @@
 using AzLogs.Ingestion.LogsIngestionTransport;
-using AzLogs.Ingestion.Options;
 using Azure.Core;
 using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.Configuration;

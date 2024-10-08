@@ -1,5 +1,4 @@
 using System.Runtime.CompilerServices;
-using AzLogs.Ingestion.Options;
 using Azure.Monitor.Ingestion;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
