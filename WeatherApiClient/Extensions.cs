@@ -11,25 +11,8 @@ public static class WeatherTransportExtensions
     /// <summary>
     /// Add WeatherTransport services to the dependency injection container
     /// </summary>
-    /// <param name="builder">Target to add</param>
-    /// <returns>Same target returned</returns>
-    public static IHostApplicationBuilder AddWeatherTransport(this IHostApplicationBuilder builder)
-    {
-        builder.Services.Configure<WeatherOptions>(
-            builder.Configuration.GetSection(WeatherOptions.Section)
-        );
-
-        builder.Services.AddHttpClient<WeatherClient>();
-        builder.Services.AddTransient<WeatherTransport>();
-
-        return builder;
-    }
-
-    /// <summary>
-    /// Add WeatherTransport services to the dependency injection container
-    /// </summary>
-    /// <param name="builder">Existing application builder</param>
-    /// <returns>Updated application builder</returns>
+    /// <param name="builder">Existing host builder</param>
+    /// <returns>Updated host builder</returns>
     public static IHostBuilder AddWeatherTransport(this IHostBuilder builder)
     {
         builder.ConfigureServices((context, services) => {
