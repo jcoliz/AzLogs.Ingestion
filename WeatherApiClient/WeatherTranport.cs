@@ -3,7 +3,7 @@ using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace AzLogs.Ingestion.WeatherTransport;
+namespace AzLogs.Ingestion.WeatherServiceTransport;
 
 /// <summary>
 /// Service to fetch Weather forecasts according to application configuration

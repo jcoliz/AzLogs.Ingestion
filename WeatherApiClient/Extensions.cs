@@ -1,4 +1,4 @@
-using AzLogs.Ingestion.WeatherTransport;
+using AzLogs.Ingestion.WeatherServiceTransport;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Microsoft.Extensions.Hosting;

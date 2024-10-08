@@ -1,7 +1,7 @@
 using System.Runtime.CompilerServices;
 using AzLogs.Ingestion.LogsIngestionTransport;
 using AzLogs.Ingestion.Options;
-using AzLogs.Ingestion.WeatherApiClient;
+using AzLogs.Ingestion.WeatherServiceTransport;
 using Microsoft.Extensions.Options;
 
 namespace AzLogs.Ingestion;
