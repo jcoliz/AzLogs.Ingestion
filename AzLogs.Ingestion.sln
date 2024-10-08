@@ -5,7 +5,7 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackgroundService", "BackgroundService\BackgroundService.csproj", "{CCCF154B-5D00-4C1F-AF2C-66C8D065FAD7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeatherApiClient", "WeatherApiClient\WeatherApiClient.csproj", "{CA42FB0B-4D0F-4239-8505-59B277449F8B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeatherServiceTransport", "WeatherServiceTransport\WeatherServiceTransport.csproj", "{CA42FB0B-4D0F-4239-8505-59B277449F8B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogsIngestionTransport", "LogsIngestionTransport\LogsIngestionTransport.csproj", "{E1C85A8A-2997-463D-830E-863966D3D14F}"
 EndProject

@@ -1,4 +1,4 @@
-# Weather Transport library
+# Weather Service Transport library
 
 This project builds a library to retrieve weather forecasts from the [National Weather Service API](https://www.weather.gov/documentation/services-web-api). As part of this, it generates a client SDK for connecting to the remote service, trimmed down to just the subset needed for this sample.
 

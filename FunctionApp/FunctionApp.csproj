@@ -29,7 +29,7 @@
     <Using Include="System.Threading.ExecutionContext" Alias="ExecutionContext" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\WeatherApiClient\WeatherApiClient.csproj" />
+    <ProjectReference Include="..\WeatherServiceTransport\WeatherServiceTransport.csproj" />
     <ProjectReference Include="..\LogsIngestionTransport\LogsIngestionTransport.csproj" />
   </ItemGroup>
 </Project>
