@@ -1,7 +1,6 @@
 using AzLogs.Ingestion;
 using AzLogs.Ingestion.Options;
 using Azure.Identity;
-using Microsoft.Extensions.Azure;
 
 var builder = Host.CreateApplicationBuilder(args);
 

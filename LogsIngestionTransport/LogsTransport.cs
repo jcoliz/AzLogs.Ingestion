@@ -7,7 +7,7 @@ using Microsoft.Extensions.Options;
 namespace AzLogs.Ingestion.LogsIngestionTransport;
 
 /// <summary>
-/// Service to upload logs to Data Collection Enpdpoint as identified in application configuration
+/// Service to upload logs to Data Collection Endpoint as identified in application configuration
 /// </summary>
 /// <param name="logsClient">Underlying azure client to use for upload</param>
 /// <param name="logOptions">Options describing where to send logs</param>

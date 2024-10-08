@@ -14,7 +14,7 @@ namespace AzLogs.Ingestion;
 /// </remarks>
 /// <param name="weatherTransport">Transport subsystem which will fetch weather forecasts from NWS</param>
 /// <param name="logsClient">Transport subsystem which will send logs to log collection endpoint</param>
-/// <param name="workerOptions">Options conrtolling our behaviour</param>
+/// <param name="workerOptions">Options controlling our behaviour</param>
 /// <param name="logger">Where to send application logs</param>
 public partial class Worker(
     WeatherTransport weatherTransport, 
