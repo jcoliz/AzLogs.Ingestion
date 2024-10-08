@@ -15,7 +15,7 @@ builder.Services.Configure<WorkerOptions>(
 builder.Services.AddHostedService<Worker>();
 
 // Set up weather client and transport
-builder.AddWeatherApiClient();
+builder.AddWeatherTransport();
 
 // Set up logs transport with Azure identity as specified in config
 IdentityOptions idOptions = new();

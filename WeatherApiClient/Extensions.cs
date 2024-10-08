@@ -4,16 +4,16 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Microsoft.Extensions.Hosting;
 
 /// <summary>
-/// Hosting extensions for WeatherApiClient
+/// Hosting extensions for WeatherTransport
 /// </summary>
-public static class WeatherApiClientExtensions
+public static class WeatherTransportExtensions
 {
     /// <summary>
-    /// Add services for WeatherApiClient
+    /// Add WeatherTransport services to the dependency injection container
     /// </summary>
     /// <param name="builder">Target to add</param>
     /// <returns>Same target returned</returns>
-    public static IHostApplicationBuilder AddWeatherApiClient(this IHostApplicationBuilder builder)
+    public static IHostApplicationBuilder AddWeatherTransport(this IHostApplicationBuilder builder)
     {
         builder.Services.Configure<WeatherOptions>(
             builder.Configuration.GetSection(WeatherOptions.Section)
@@ -26,11 +26,11 @@ public static class WeatherApiClientExtensions
     }
 
     /// <summary>
-    /// Add a weather client to the dependency injection contianer 
+    /// Add WeatherTransport services to the dependency injection container
     /// </summary>
     /// <param name="builder">Existing application builder</param>
     /// <returns>Updated application builder</returns>
-    public static IHostBuilder AddWeatherApiClient(this IHostBuilder builder)
+    public static IHostBuilder AddWeatherTransport(this IHostBuilder builder)
     {
         builder.ConfigureServices((context, services) => {
             services.Configure<WeatherOptions>(

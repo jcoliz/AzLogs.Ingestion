@@ -9,8 +9,8 @@ var host = new HostBuilder()
         services.AddApplicationInsightsTelemetryWorkerService();
         services.ConfigureFunctionsApplicationInsights();
     })
-    .AddWeatherApiClient()
+    .AddWeatherTransport()
     .AddLogsIngestionTransport(new DefaultAzureCredential())
     .Build();
 
-host.Run();
+await host.RunAsync();
