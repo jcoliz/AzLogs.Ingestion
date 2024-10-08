@@ -67,7 +67,7 @@ public partial class Worker(
         var forecast = await weatherTransport.FetchForecastAsync(stoppingToken).ConfigureAwait(false);
         if (forecast is not null)
         {
-            await logsTransport.UploadToLogsAsync(forecast, stoppingToken).ConfigureAwait(false);
+            await logsTransport.UploadToLogsAsync([forecast], stoppingToken).ConfigureAwait(false);
         }
     }
 

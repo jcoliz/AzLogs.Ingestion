@@ -36,7 +36,7 @@ public partial class TransferLogs(
             var forecast = await weatherTransport.FetchForecastAsync(CancellationToken.None).ConfigureAwait(false);
             if (forecast is not null)
             {
-                await logsTransport.UploadToLogsAsync(forecast, CancellationToken.None).ConfigureAwait(false);
+                await logsTransport.UploadToLogsAsync([forecast], CancellationToken.None).ConfigureAwait(false);
             }
 
             logOk();

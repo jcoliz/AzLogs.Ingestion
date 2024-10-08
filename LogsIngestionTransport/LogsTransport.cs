@@ -24,11 +24,11 @@ public partial class LogsTransport(
     private readonly ILogger<LogsTransport> _logger = logger;
 
     /// <summary>
-    /// Send forecast up to Log Analytics
+    /// Send data points up to Log Analytics
     /// </summary>
-    /// <param name="period">Forecast data received from NWS</param>
+    /// <param name="dataPoints">Data points to send</param>
     /// <param name="stoppingToken">Cancellation token</param>
-    public async Task UploadToLogsAsync(object period, CancellationToken stoppingToken)
+    public async Task UploadToLogsAsync(IEnumerable<object> dataPoints, CancellationToken stoppingToken)
     {
         try
         {
@@ -36,7 +36,7 @@ public partial class LogsTransport(
             (
                 ruleId: logOptions.Value.DcrImmutableId, 
                 streamName: logOptions.Value.Stream,
-                logs: [ period ],
+                logs: dataPoints,
                 cancellationToken: stoppingToken
             )
             .ConfigureAwait(false);
