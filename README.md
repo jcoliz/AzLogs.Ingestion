@@ -151,7 +151,7 @@ Once you have deployed your Azure resources, you'll need to configure the sample
 as well as the details on your Data Collection Rule. You could follow the practices outlined in
 [Safe storage of app secrets in development in ASP.NET Core](https://learn.microsoft.com/en-us/aspnet/core/security/app-secrets).
 
-Alternately, you can create a `config.toml` file containing these secrets in the `BackgroundService` folder. This file will not be committed to source control.
+Alternately, you can create a `config.toml` file containing these secrets in the [BackgroundService](./BackgroundService/) folder. This file will not be committed to source control.
 To begin, copy the existing [config.template.toml](./BackgroundService/config.template.toml) file to a new file named `config.toml`. Then fill this in with the values unique to your deployment.
 
 ```toml
@@ -168,7 +168,7 @@ DcrImmutableId = "<data_collection_rule_id>" # The Immutable ID for this Data Co
 
 Optionally, you could elect to configure the options for connecting to the weather service.
 Out of the box, the sample requests a weather forecast for the area surrounding the [Space Needle](https://www.spaceneedle.com/),
-checking once every 5 seconds. You can find these values in `appsettings.json`.
+checking once every 5 seconds. You can find these values in [appsettings.json](./BackgroundService/appsettings.json).
 
 ```json
 "Weather": {
@@ -188,7 +188,7 @@ Frequency is described in in Hours:Minutes:Seconds.
 
 ## Running Locally
 
-Once you have all that set up, simply build and run the `BackgroundService` project!
+Once you have all that set up, simply build and run the [BackgroundService](./BackgroundService/) project!
 
 ```powershell
 dotnet run --project BackgroundService
@@ -197,7 +197,7 @@ dotnet run --project BackgroundService
 <6> [ 23/09/2024 12:04:42 ] AzLogs.Ingestion.Worker[1020] UploadToLogsAsync: Sent OK 204
 ```
 
-Note that the underlying services all log quite a bit of information to the application logger as well. If you want to see that in action, simply increase the default level in `appsettings.json`:
+Note that the underlying services all log quite a bit of information to the application logger as well. If you want to see that in action, simply increase the default level in [appsettings.json](./BackgroundService/appsettings.json):
 
 ```json
 "Logging": {
@@ -229,7 +229,7 @@ Congratulations, you have successfully ingested logs into a Log Analytics Worksp
 ## Publish as an Azure Function
 
 We will now run the same code as above, built as an Azure Function. For this section, you'll need to have a
-Terminal Window open, in the `FunctionApp` folder.
+Terminal Window open, in the [FunctionApp](./FunctionApp/) folder.
 
 ### Install Tools
 
@@ -300,7 +300,7 @@ Unfortunately, at the current moment, the application fails to upload the data t
 {"Error":{"Code":"InvalidApiVersion","Message":"The api version is invalid. Allowed Api versions: 2021-11-01-preview,2023-04-24."}}
 ```
 
-Track the details here: [[BUG] LogsIngestionClient.UploadAsync fails when running in Azure Function](https://github.com/Azure/azure-sdk-for-net/issues/46439)
+Follow the progress of this this issue here: [[BUG] LogsIngestionClient.UploadAsync fails when running in Azure Function](https://github.com/Azure/azure-sdk-for-net/issues/46439)
 
 ## Tear down
 
