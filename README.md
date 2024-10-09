@@ -56,7 +56,7 @@ az ad app credential reset --id <client_id>
 
 This produces critical information you'll need to record and later configure the apps to connect.
 
-```dotnetcli
+```json
 {
   "appId": "<client_id>",
   "password": "<client_secret>",
