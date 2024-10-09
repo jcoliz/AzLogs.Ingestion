@@ -304,8 +304,6 @@ This gives us easy access to watch the remote logs from the comfort of our termi
 2024-10-09T00:57:20Z   [Information]   Executed 'Functions.TransferLogs' (Succeeded, Id=7e58f0b2-91b6-4a43-b3c9-a61642e42f38, Duration=74ms)
 ```
 
-Follow the progress of this this issue here: [[BUG] LogsIngestionClient.UploadAsync fails when running in Azure Function](https://github.com/Azure/azure-sdk-for-net/issues/46439)
-
 ## Publish your application in production
 
 There are two different approaches to publishing your application in production via a pipeline:
