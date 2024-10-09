@@ -301,6 +301,15 @@ Unfortunately, at the current moment, the application fails to upload the data t
 
 Follow the progress of this this issue here: [[BUG] LogsIngestionClient.UploadAsync fails when running in Azure Function](https://github.com/Azure/azure-sdk-for-net/issues/46439)
 
+## Publish your application from CI pipeline
+
+There are two different approaches to publishing your application in production via a pipeline:
+
+1. Build a .ZIP package, then transfer this file into your deployment process. If you were creating a Sentinel Connecter, for example, you would include this built package into your pull request.
+1. Deploy directly from a CD pipeline.
+
+In this sample, the [build.yaml](./.github/workflows/build.yml) pipeline definition publishes a ZIP file, then attaches it to the build results to be retrieved manually. This follows the [Publish your application](https://learn.microsoft.com/en-us/azure/azure-functions/dotnet-isolated-process-guide?tabs=windows#publish-your-application) guidance.
+
 ## Tear down
 
 When you're done, don't forget to tear down the resource group to avoid unexpected charges.
