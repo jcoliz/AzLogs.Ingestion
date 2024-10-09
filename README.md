@@ -287,16 +287,21 @@ Now that you can see it all running locally, it's time to publish to Azure! You'
 func azure functionapp publish <FunctionAppName>
 ```
 
-Once it's complete, you can connect with the logstream and watch it at work
+Once it's complete, you can connect with the remote logstream:
 
 ```dotnetcli
 func azure functionapp logstream <FunctionAppName>
 ```
 
-Unfortunately, at the current moment, the application fails to upload the data to the DCE, giving this result:
+This gives us easy access to watch the remote logs from the comfort of our terminal window:
 
-```json
-{"Error":{"Code":"InvalidApiVersion","Message":"The api version is invalid. Allowed Api versions: 2021-11-01-preview,2023-04-24."}}
+```text
+2024-10-09T00:57:20Z   [Information]   Executing 'Functions.TransferLogs' (Reason='Timer fired at 2024-10-09T00:57:20.0008780+00:00', Id=7e58f0b2-91b6-4a43-b3c9-a61642e42f38)
+2024-10-09T00:57:20Z   [Information]   FetchForecastAsync: Received OK {"number":1,"name":"This Afternoon","startTime":"2024-10-08T17:00:00-07:00","endTime":"2024-10-08T18:00:00-07:00","isDaytime":true,"temperature":67,"temperatureUnit":"F","temperatureTrend":"","probabilityOfPrecipitation":{"value":40,"maxValue":0,"minValue":0,"unitCode":"wmoUnit:percent","qualityControl":"Z"},"dewpoint":null,"relativeHumidity":null,"windSpeed":"6 mph","windGust":null,"windDirection":"S","icon":"https://api.weather.gov/icons/land/day/rain_showers,40?size=medium","shortForecast":"Chance Rain Showers","detailedForecast":"A chance of rain showers. Partly sunny, with a high near 67. South wind around 6 mph. Chance of precipitation is 40%. New rainfall amounts less than a tenth of an inch possible."}
+2024-10-09T00:57:20Z   [Information]   Request [a2176ba6-b497-478e-8cf4-4dc4b0974eda] POST https://dcep-redacted.westus2-1.ingest.monitor.azure.com/dataCollectionRules/dcr-redacted/streams/Custom-Forecasts_CL?api-version=2023-01-01
+2024-10-09T00:57:20Z   [Information]   UploadToLogsAsync: Sent OK 204
+2024-10-09T00:57:20Z   [Information]   Run: OK
+2024-10-09T00:57:20Z   [Information]   Executed 'Functions.TransferLogs' (Succeeded, Id=7e58f0b2-91b6-4a43-b3c9-a61642e42f38, Duration=74ms)
 ```
 
 Follow the progress of this this issue here: [[BUG] LogsIngestionClient.UploadAsync fails when running in Azure Function](https://github.com/Azure/azure-sdk-for-net/issues/46439)

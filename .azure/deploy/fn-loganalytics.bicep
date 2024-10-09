@@ -40,7 +40,7 @@ module fn 'AzDeploy.Bicep/Web/fn-storage.bicep' = {
       }
       {
         name: 'LogIngestion__EndpointUri'
-        value: endpoint.properties.metricsIngestion.endpoint
+        value: endpoint.properties.logsIngestion.endpoint
       }
       {
         name: 'LogIngestion__Stream'
