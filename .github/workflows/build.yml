@@ -21,11 +21,9 @@ jobs:
       run: dotnet build --no-restore
     - name: Publish
       run: dotnet publish FunctionApp --configuration Release --output ./publish
-    - name: Package
-      uses: montudor/action-zip@v1
-      with:
-        args: zip -qq -r function.zip publish  
-    - name: Archive built package
+    - name: Create package
+      run: Compress-Archive -Path publish/* -Destination function.zip
+    - name: Archive package
       uses: actions/upload-artifact@v4
       with:
         name: zip-package
