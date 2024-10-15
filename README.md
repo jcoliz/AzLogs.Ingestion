@@ -2,7 +2,7 @@
 
 [![Build](https://github.com/jcoliz/AzLogs.Ingestion/actions/workflows/build.yml/badge.svg)](https://github.com/jcoliz/AzLogs.Ingestion/actions/workflows/build.yml)
 
-This is a fully-built sample using the [Logs Ingestion API in Azure Monitor](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/logs-ingestion-api-overview) on .NET 8.0.
+This is a complete end-to-end sample using the [Logs Ingestion API in Azure Monitor](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/logs-ingestion-api-overview) on .NET 8.0.
 The sample retrieves weather forecasts from the U.S. [National Weather Service API](https://www.weather.gov/documentation/services-web-api), then forwards them on to a [Logs Analytics Workspace](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/log-analytics-workspace-overview) using a [Data Collection Rule](https://learn.microsoft.com/en-us/azure/azure-monitor/essentials/data-collection-rule-overview). It can be deployed as an [Azure Function](https://learn.microsoft.com/en-us/azure/azure-functions/functions-overview?pivots=programming-language-csharp) or run as a worker service on your local machine.
 
 ## Use case
@@ -17,7 +17,7 @@ Let's say we have some important data available in an external service, and we w
 
 <p align="center"><img src="https://raw.githubusercontent.com/jcoliz/AzLogs.Ingestion/refs/heads/main/docs/images/Architecture.png" alt="System Architecture"></p>
 
-This is a very simple, focused sample. Our Azure Function application sits at the center of the system, doing all the work.
+Our Azure Function application sits at the center of the system, doing all the work.
 It periodically pulls data from an external source (here, weather.gov) then forwards it to a Log Analytics Workspace
 using a Data Collection Endpoint and Data Collection Rule.
 
@@ -84,34 +84,21 @@ When you're done, you'll have four key pieces of information
 ## Deploy Azure resources
 
 This sample requires five Azure resources: Log Analytics Workspace, Data Collection Rule, and Data Collection Endpoint, Azure Function, and Storage Account. There is an Azure Resource Manager (ARM) template here to set up everything you need, ready to go: [azlogs-ingestion-fn.bicep](./.azure/deploy/azlogs-ingestion-fn.bicep).
-Did you clone this repo with submodules? If not, now is the time to init and update submodules so you have the [AzDeploy.Bicep](https://github.com/jcoliz/AzDeploy.Bicep) project handy with the
-necessary module templates.
+Be sure to clone this repo with submodules so you have the [AzDeploy.Bicep](https://github.com/jcoliz/AzDeploy.Bicep) project handy with the necessary module templates.
 
 ```powershell
-git submodule update --init
+ git clone --recurse-submodules https://github.com/jcoliz/AzLogs.Ingestion.git
 ```
 
-From a PowerShell window in this folder, complete the following steps.
-
-First, we'll set an environment variable to our chosen resource group name. Pick anything that helps you remember what the group is for:
+From a PowerShell window in this folder, complete the following steps. You may choose any resource group that helps you remember what the group is for, and of course any Azure datacenter location.
 
 ```powershell
 $env:RESOURCEGROUP = "azlogs-ingestion"
-```
-
-Next, we will create that group, in our chosen location. I'm a fan of [Moses Lake](https://www.datacenters.com/microsoft-azure-west-us-2-washington). You may feel differently.
-
-```powershell
 az group create --name $env:RESOURCEGROUP --location "West US 2"
-```
-
-Finally, the most important step, where we deploy our resources:
-
-```powershell
 az deployment group create --name "Deploy-$(Get-Random)" --resource-group $env:RESOURCEGROUP --template-file .azure\deploy\azlogs-ingestion-fn.bicep --parameters .azure\deploy\azlogs-ingestion.parameters.json
 ```
 
-You will be prompted to enter the Service Principal ID of the Entra App Registration you created earlier.
+You will be prompted to enter the Service Principal ID of the app you created earlier.
 
 ```dotnetcli
 Please provide string value for 'principalId' (? for help): 
