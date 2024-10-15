@@ -1,11 +1,12 @@
-﻿using AzLogs.Ingestion.WeatherServiceTransport;
-using AzLogs.Ingestion.LogsIngestionTransport;
+﻿using AzLogs.Ingestion.Options;
+using AzLogs.Ingestion.WeatherServiceTransport;
 using Azure.Identity;
 using Azure.Monitor.Ingestion;
 using Microsoft.Extensions.Configuration;
-using AzLogs.Ingestion.Options;
 
+//
 // Load configuration
+//
 
 var configuration = new ConfigurationBuilder()
     .AddTomlFile("config.toml", optional: true)
@@ -17,12 +18,16 @@ configuration.Bind(LogIngestionOptions.Section, logsOptions);
 var idOptions = new IdentityOptions();
 configuration.Bind(IdentityOptions.Section, idOptions);
 
+//
 // Set up Weather Client to connect with source data
+//
 
 using var httpClient = new HttpClient();
 var weatherClient = new WeatherClient(httpClient);
 
+//
 // Set up Azure logs ingestion client to connect with logs ingestion endpoint
+//
 
 var credential = new ClientSecretCredential
 (
@@ -32,20 +37,23 @@ var credential = new ClientSecretCredential
 );
 var logsClient = new LogsIngestionClient(logsOptions.EndpointUri, credential);
 
+//
 // Fetch forecasts
+//
 
 var forecasts = await weatherClient.Gridpoint_ForecastAsync(NWSForecastOfficeId.SEW,124,69);
 
 Console.WriteLine($"OK. Received {forecasts.Properties.Periods.Count} forecasts");
 
+//
 // Upload logs
+//
 
 var response = await logsClient.UploadAsync
 (
     logsOptions.DcrImmutableId,
     logsOptions.Stream, 
     [forecasts.Properties.Periods.FirstOrDefault()]
-)
-.ConfigureAwait(false);
+);
 
 Console.WriteLine($"OK. Uploaded status {response.Status}");
