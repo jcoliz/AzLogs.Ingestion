@@ -33,103 +33,50 @@ This sample will first follow that article closely, before moving on to demonstr
 
 ## Register a Microsoft Entra app
 
-The very first step is to [Register an application with the Microsoft Identity Platform](https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app?tabs=client-secret). This is helpful for running the sample locally.
-When running in Azure, this app registration is not needed. Instead, the function app will use its [Managed Identity](https://learn.microsoft.com/en-us/azure/app-service/overview-managed-identity) to connect with the DCR. Be sure to also [Add a client secret](https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app?tabs=client-secret#add-credentials) as described on the page above.
-
-Alternately, you can follow these steps using the Azure CLI:
+The very first step is to [Register an application with the Microsoft Identity Platform](https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app?tabs=client-secret). From a PowerShell window in this folder, simply run the Create-AppRegistration.ps1 script.
 
 ```dotnetcli
-az ad app create --display-name azlogs-ingestion --key-type Password --sign-in-audience AzureADMyOrg
+Create-AppRegistration -Name "azlogs-ingestion"
 ```
 
-In the output of that command, look for the `AppId` field, which you'll need for the following step.
+After completion, this script will display configuration values you'll need later to configure the app.
 
-```json
-"appId": "<client_id>",
+```toml
+[Identity]
+TenantId = "<tenant_id>"
+AppId = "<client_id>"
+AppSecret = "<client_secret>" 
 ```
 
-Next, you'll need a client secret to connect:
+Additionally, it will display the Service Principal ID needed when deploying Azure resources, next:
 
-```dotnetcli
-az ad app credential reset --id <client_id>
 ```
-
-This produces critical information you'll need to record and later configure the apps to connect.
-
-```json
-{
-  "appId": "<client_id>",
-  "password": "<client_secret>",
-  "tenant": "<tenant_id>"
-}
+-ServicePrincipal <principal_id>
 ```
-
-After registering the application, either using the portal or CLI, you'll also need the Service Principal ID.
-For more details, see [Application and service principal objects in Microsoft Entra ID](https://learn.microsoft.com/en-us/entra/identity-platform/app-objects-and-service-principals?tabs=azure-cli). The fastest way to get this is using the Azure CLI, supplying the Client ID for your new application.
-
-```dotnetcli
-az ad sp list --filter "appId eq '<client_id>'"
-```
-
-This displays a full list of information about the Service Principal for your application.
-The piece you're looking for is the `id` field.
-
-When you're done, you'll have four key pieces of information
-
-* Tenant ID
-* Client ID (aka 'appId')
-* Client Secret (aka 'password')
-* Service Principal ID
 
 ## Deploy Azure resources
 
-This sample requires five Azure resources: Log Analytics Workspace, Data Collection Rule, and Data Collection Endpoint, Azure Function, and Storage Account. There is an Azure Resource Manager (ARM) template here to set up everything you need, ready to go: [azlogs-ingestion-fn.bicep](./.azure/deploy/azlogs-ingestion-fn.bicep).
+This sample requires five Azure resources: Log Analytics Workspace, Data Collection Rule, and Data Collection Endpoint. There is an Azure Resource Manager (ARM) template here to set up everything you need, ready to go: [azlogs-ingestion.bicep](./.azure/deploy/azlogs-ingestion.bicep).
 Be sure to clone this repo with submodules so you have the [AzDeploy.Bicep](https://github.com/jcoliz/AzDeploy.Bicep) project handy with the necessary module templates.
 
 ```powershell
- git clone --recurse-submodules https://github.com/jcoliz/AzLogs.Ingestion.git
+git clone --recurse-submodules https://github.com/jcoliz/AzLogs.Ingestion.git
 ```
 
-From a PowerShell window in this folder, complete the following steps. You may choose any resource group that helps you remember what the group is for, and of course any Azure datacenter location.
-
-```powershell
-$env:RESOURCEGROUP = "azlogs-ingestion"
-az group create --name $env:RESOURCEGROUP --location "West US 2"
-az deployment group create --name "Deploy-$(Get-Random)" --resource-group $env:RESOURCEGROUP --template-file .azure\deploy\azlogs-ingestion-fn.bicep --parameters .azure\deploy\azlogs-ingestion.parameters.json
-```
-
-You will be prompted to enter the Service Principal ID of the app you created earlier.
+From a PowerShell window in this folder, simply run the Deploy-Services.ps1 script. You'll need to supply the `principal_id` for your app, from the previous step.
+Also, feel free to choose any resource group name and Azure data center location:
 
 ```dotnetcli
-Please provide string value for 'principalId' (? for help): 
+./scripts/Deploy-Services -ResourceGroup "azlogs-ingestion" -Location "West US 2" -ServicePrincipal "<principal_id>"
 ```
 
-After the deployment completes, take note of the outputs from this deployment. You will use some of these values to configure the sample so it points to your newly-provisioned resources.
-Look for the `outputs` section of the deployment. Please refer the configuration section below to find where to put them.
+After completion, this script will display configuration values you'll need in the next step.
 
-```json
-"outputs": {
-  "EndpointUri": {
-    "type": "String",
-    "value": "https://dcep-redacted.westus2-1.ingest.monitor.azure.com"
-  },
-  "DcrImmutableId": {
-    "type": "String",
-    "value": "dcr-redacted"
-  },
-  "Stream": {
-    "type": "String",
-    "value": "Custom-Forecasts_CL"
-  },
-  "StorageName": {
-    "type": "String",
-    "value": "storage000redacted"
-  },
-  "FunctionAppName": {
-    "type": "String",
-    "value": "fn-redacted"
-  }
-},
+```toml
+[LogIngestion]
+EndpointUri = "<data_collection_endpoint_uri>" 
+Stream = "<stream_name>" 
+DcrImmutableId = "<data_collection_rule_id>"
 ```
 
 ## Configuration
@@ -152,26 +99,6 @@ EndpointUri = "<data_collection_endpoint_uri>" # Data collection endpoint, be su
 Stream = "<stream_name>" # The stream name to send to, usually `Custom-<table>_CL`
 DcrImmutableId = "<data_collection_rule_id>" # The Immutable ID for this Data Collection Rule 
 ```
-
-Optionally, you could elect to configure the options for connecting to the weather service.
-Out of the box, the sample requests a weather forecast for the area surrounding the [Space Needle](https://www.spaceneedle.com/),
-checking once every 5 seconds. You can find these values in [appsettings.json](./BackgroundService/appsettings.json).
-
-```json
-"Weather": {
-  "Office": "SEW",
-  "GridX": 124,
-  "GridY": 69
-},
-"Worker": {
-  "Frequency": "00:00:05"
-}
-```
-
-The weather office, and grid x,y positions are specific to the NWS grid system. You can find values by calling the `/points/{lat,long}`
-endpoint. The NWS has a handy Swagger UI on its API page, so you can try these out diretly.
-
-Frequency is described in in Hours:Minutes:Seconds.
 
 ## Running Locally
 
