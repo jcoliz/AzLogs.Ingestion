@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogsIngestionTransport", "L
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FunctionApp", "FunctionApp\FunctionApp.csproj", "{D09914A0-1305-411F-94A5-E2D0815138E2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp", "ConsoleApp\ConsoleApp.csproj", "{BC9289CC-A53D-4AF8-835C-00634015EABC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +38,9 @@ Global
 		{D09914A0-1305-411F-94A5-E2D0815138E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D09914A0-1305-411F-94A5-E2D0815138E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D09914A0-1305-411F-94A5-E2D0815138E2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BC9289CC-A53D-4AF8-835C-00634015EABC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC9289CC-A53D-4AF8-835C-00634015EABC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC9289CC-A53D-4AF8-835C-00634015EABC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC9289CC-A53D-4AF8-835C-00634015EABC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
